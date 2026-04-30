@@ -55,8 +55,24 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
+        move_calc calculator = new move_calc();
+        if (piece.getPieceType() == PieceType.ROOK) {
+            return calculator.Rook_move(piece, board, myPosition);
+        }
+        if (piece.getPieceType() == PieceType.KNIGHT) {
+            return calculator.Knight_move(piece, board, myPosition);
+        }
         if (piece.getPieceType() == PieceType.BISHOP) {
-            return List.of(new ChessMove(new ChessPosition(5,4),new ChessPosition(1,8), null));
+            return calculator.Bishop_move(piece, board, myPosition);
+        }
+        if (piece.getPieceType() == PieceType.KING) {
+            return calculator.King_move(piece, board, myPosition);
+        }
+        if (piece.getPieceType() == PieceType.QUEEN) {
+            return calculator.Queen_move(piece, board, myPosition);
+        }
+        if (piece.getPieceType() == PieceType.PAWN) {
+            return calculator.Pawn_move(piece, board, myPosition);
         }
         return List.of();
     }

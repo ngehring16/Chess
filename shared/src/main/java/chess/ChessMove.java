@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -44,6 +45,11 @@ public class ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
     }
+
+
+
+
+
 
     @Override
     public String toString() {
