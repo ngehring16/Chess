@@ -163,7 +163,10 @@ public class move_calc {
     }
 
     public Collection<ChessMove> Queen_move(ChessPiece Queen, ChessBoard board, ChessPosition position){
-        return List.of();
+        Collection<ChessMove> bishop_moves = Bishop_move(Queen, board, position);
+        Collection<ChessMove> rook_moves = Rook_move(Queen, board, position);
+        bishop_moves.addAll(rook_moves);
+        return bishop_moves;
     }
 
     public Collection<ChessMove> Pawn_move(ChessPiece Pawn, ChessBoard board, ChessPosition position){
