@@ -200,18 +200,15 @@ public class move_calc {
         ArrayList<ChessMove> moves = new ArrayList<>();
         var y = position.getRow();
         var x = position.getColumn();
-        while (x > 1){
-            ChessPosition next_position = new ChessPosition(x - 1, y);
-            ChessPiece next_piece = board.getPiece(next_position);
-            ChessMove current_move = new ChessMove(position, next_position, null);
-            if (next_piece != null){
-                if (mover(moves, King, next_piece, current_move) < 2){
-                    break;
-                }
-            }
-            moves.add(current_move);
-            x--;
-        }
+
+        one_by_one(moves, board, x+1, y, position, King);
+        one_by_one(moves, board, x+1, y+1, position, King);
+        one_by_one(moves, board, x, y+1, position, King);
+        one_by_one(moves, board, x-1, y, position, King);
+        one_by_one(moves, board, x-1, y+1, position, King);
+        one_by_one(moves, board, x-1, y-1, position, King);
+        one_by_one(moves, board, x, y-1, position, King);
+        one_by_one(moves, board, x+1, y-1, position, King);
         return moves;
     }
 
