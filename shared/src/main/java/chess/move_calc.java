@@ -21,6 +21,25 @@ public class move_calc {
         return 2;
     }
 
+    public void one_by_one(Collection<ChessMove> moves, ChessBoard board, int x, int y, ChessPosition position, ChessPiece piece){
+        if(x > 8 || x < 1 || y > 8 || y < 1){
+            return;
+        }
+        ChessPosition next_spot = new ChessPosition(y,x);
+        ChessPiece next_piece = board.getPiece(next_spot);
+        ChessMove next_move = new ChessMove(position, next_spot, null);
+        if (next_piece != null){
+            if (next_piece.getTeamColor() != piece.getTeamColor()){
+                moves.add(next_move);
+                return;
+            }
+            else{
+                return;
+            }
+        }
+        moves.add(next_move);
+    }
+
     public void promote(ArrayList<ChessMove> moves, ChessPosition position1, ChessPosition position2){
         moves.add(new ChessMove(position1, position2, ChessPiece.PieceType.QUEEN));
         moves.add(new ChessMove(position1, position2, ChessPiece.PieceType.ROOK));
@@ -92,7 +111,19 @@ public class move_calc {
     }
 
     public Collection<ChessMove> Knight_move(ChessPiece Knight, ChessBoard board, ChessPosition position){
-        return List.of();
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        int x = position.getColumn();
+        int y = position.getRow();
+
+        one_by_one(moves, board, x+1, y+2, position, Knight);
+        one_by_one(moves, board, x+2, y+1, position, Knight);
+        one_by_one(moves, board, x-1, y+2, position, Knight);
+        one_by_one(moves, board, x-2, y+1, position, Knight);
+        one_by_one(moves, board, x+2, y-1, position, Knight);
+        one_by_one(moves, board, x+1, y-2, position, Knight);
+        one_by_one(moves, board, x-1, y-2, position, Knight);
+        one_by_one(moves, board, x-2, y-1, position, Knight);
+        return moves;
     }
 
     public Collection<ChessMove> Bishop_move(ChessPiece Bishop, ChessBoard board, ChessPosition position){
@@ -166,7 +197,22 @@ public class move_calc {
     }
 
     public Collection<ChessMove> King_move(ChessPiece King, ChessBoard board, ChessPosition position){
-        return List.of();
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        var y = position.getRow();
+        var x = position.getColumn();
+        while (x > 1){
+            ChessPosition next_position = new ChessPosition(x - 1, y);
+            ChessPiece next_piece = board.getPiece(next_position);
+            ChessMove current_move = new ChessMove(position, next_position, null);
+            if (next_piece != null){
+                if (mover(moves, King, next_piece, current_move) < 2){
+                    break;
+                }
+            }
+            moves.add(current_move);
+            x--;
+        }
+        return moves;
     }
 
     public Collection<ChessMove> Queen_move(ChessPiece Queen, ChessBoard board, ChessPosition position){
