@@ -100,19 +100,19 @@ public class ChessBoard implements Cloneable {
 
     @Override
     public String toString() {
-        String piece_name = "";
+        String pieceName = "";
         for (var i = 1; i < 8; i++){
             for (var j = 1; j < 8; j++){
-                ChessPiece Piece = getPiece(new ChessPosition(i,j));
-                if (Piece != null){
-                    piece_name += Piece;
+                ChessPiece piece = getPiece(new ChessPosition(i,j));
+                if (piece != null){
+                    pieceName += piece;
                 }
                 else{
-                    piece_name += "_";
+                    pieceName += "_";
                 }
             }
         }
-        return piece_name;
+        return pieceName;
     }
 
     @Override
