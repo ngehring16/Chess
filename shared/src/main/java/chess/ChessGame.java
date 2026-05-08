@@ -20,17 +20,18 @@ public class ChessGame {
         board.resetBoard();
     }
 
-    public ChessPosition find_king(TeamColor color, ChessPiece KING){
+    public boolean has_valid_moves(TeamColor teamColor){
+        Collection<ChessMove> valid_moves = new ArrayList<>();
         for (int i = 1; i < 9; i++){
             for (int j =1; j<9; j++){
                 ChessPosition spot = new ChessPosition(i,j);
                 ChessPiece piece = board.getPiece(spot);
-                if (piece != null && piece.equals(KING)){
-                    return spot;
+                if (piece != null && piece.getTeamColor().equals(teamColor)){
+                    valid_moves.addAll(validMoves(spot));
                 }
             }
         }
-        return null;
+        return valid_moves.isEmpty();
     }
 
     public void move_piece(ChessPosition start, ChessPosition end, ChessBoard board){
@@ -100,7 +101,6 @@ public class ChessGame {
             for (ChessMove move : attacks){
                 ChessBoard cloned_board = (ChessBoard)board.clone();
                 move_piece(move.getStartPosition(), move.getEndPosition(), cloned_board);
-                System.out.println(cloned_board.getPiece(move.getEndPosition()));
                 if (!check_checker(color, cloned_board)){
                    valid_moves.add(move);
                 }
@@ -137,8 +137,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        ChessPosition king_spot = find_king(teamColor, new ChessPiece(teamColor, ChessPiece.PieceType.KING));
-        return isInCheck(teamColor) && validMoves(king_spot).isEmpty();
+        return isInCheck(teamColor) && has_valid_moves(teamColor);
     }
 
     /**
@@ -149,8 +148,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        ChessPosition king_spot = find_king(teamColor, new ChessPiece(teamColor, ChessPiece.PieceType.KING));
-        return !isInCheck(teamColor) && validMoves(king_spot).isEmpty();
+        return !isInCheck(teamColor) && has_valid_moves(teamColor);
     }
 
     /**
