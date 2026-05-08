@@ -45,18 +45,19 @@ public class ChessGame {
 
     public boolean checkChecker(TeamColor teamColor, ChessBoard board){
         ChessPiece king = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
+        Collection<ChessMove> attacks = new ArrayList<>();
         for(int i = 1; i < 9; i++){
             for (int j = 1; j < 9; j++){
                 ChessPosition spot = new ChessPosition(i,j);
                 ChessPiece piece = board.getPiece(spot);
                 if (piece != null && piece.getTeamColor() != teamColor) {
-                    Collection<ChessMove> attacks = piece.pieceMoves(board, spot);
-                    for (ChessMove moves : attacks) {
-                        ChessPosition killZone = moves.getEndPosition();
-                        ChessPiece dead = board.getPiece(killZone);
-                        if (dead != null && dead.equals(king)) {
-                            return true;
-                        }
+                    attacks = piece.pieceMoves(board, spot);
+                }
+                for (ChessMove moves : attacks) {
+                    ChessPosition killZone = moves.getEndPosition();
+                    ChessPiece dead = board.getPiece(killZone);
+                    if (dead != null && dead.equals(king)) {
+                        return true;
                     }
                 }
             }
