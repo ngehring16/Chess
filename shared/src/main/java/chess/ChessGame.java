@@ -12,12 +12,12 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessGame {
-    private ChessBoard board;
+    private ChessBoard board = new ChessBoard();
     private TeamColor team;
 
     public ChessGame() {
         setTeamTurn(TeamColor.WHITE);
-        setBoard(board);
+        board.resetBoard();
     }
 
     public void move_piece(ChessPosition start, ChessPosition end, ChessBoard board){
@@ -32,7 +32,7 @@ public class ChessGame {
             for (int j = 1; j < 9; j++){
                 ChessPosition spot = new ChessPosition(i,j);
                 ChessPiece piece = board.getPiece(spot);
-                if (piece != null) {
+                if (piece != null && piece.getTeamColor() != teamColor) {
                     Collection<ChessMove> attacks = piece.pieceMoves(board, spot);
                     for (ChessMove moves : attacks) {
                         ChessPosition kill_zone = moves.getEndPosition();
@@ -81,16 +81,14 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ArrayList<ChessMove> valid_moves = new ArrayList<>();
         try{
-            ChessBoard cloned_board = (ChessBoard)board.clone();
-            ChessPiece piece = cloned_board.getPiece(startPosition);
-            TeamColor enemy = TeamColor.WHITE;
-            if(piece.getTeamColor().equals(TeamColor.WHITE)){
-                enemy = TeamColor.BLACK;
-            }
-            Collection<ChessMove> attacks = piece.pieceMoves(cloned_board, startPosition);
+            ChessPiece piece = board.getPiece(startPosition);
+            TeamColor color = piece.getTeamColor();
+            Collection<ChessMove> attacks = piece.pieceMoves(board, startPosition);
             for (ChessMove move : attacks){
+                ChessBoard cloned_board = (ChessBoard)board.clone();
                 move_piece(move.getStartPosition(), move.getEndPosition(), cloned_board);
-                if (!check_checker(enemy, cloned_board)){
+                System.out.println(cloned_board.getPiece(move.getEndPosition()));
+                if (!check_checker(color, cloned_board)){
                    valid_moves.add(move);
                 }
             }
@@ -116,10 +114,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        if (check_checker(teamColor, board)){
-            return true;
-        }
-        return false;
+        return check_checker(teamColor, board);
     }
 
     /**

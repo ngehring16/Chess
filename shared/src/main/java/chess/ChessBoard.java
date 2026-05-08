@@ -118,8 +118,8 @@ public class ChessBoard implements Cloneable {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         var clone = new ChessBoard();
-        for (int i = 1; i<8; i++){
-            for (int j = 1; j<8; j++){
+        for (int i = 0; i<8; i++){
+            for (int j = 0; j<8; j++){
                 clone.squares[i][j] = squares[i][j];
             }
         }
