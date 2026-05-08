@@ -20,6 +20,19 @@ public class ChessGame {
         board.resetBoard();
     }
 
+    public ChessPosition find_king(TeamColor color, ChessPiece KING){
+        for (int i = 1; i < 9; i++){
+            for (int j =1; j<9; j++){
+                ChessPosition spot = new ChessPosition(i,j);
+                ChessPiece piece = board.getPiece(spot);
+                if (piece != null && piece.equals(KING)){
+                    return spot;
+                }
+            }
+        }
+        return null;
+    }
+
     public void move_piece(ChessPosition start, ChessPosition end, ChessBoard board){
         ChessPiece piece = board.getPiece(start);
         board.addPiece(end, piece);
@@ -124,7 +137,8 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition king_spot = find_king(teamColor, new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+        return isInCheck(teamColor) && validMoves(king_spot).isEmpty();
     }
 
     /**
@@ -135,7 +149,8 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition king_spot = find_king(teamColor, new ChessPiece(teamColor, ChessPiece.PieceType.KING));
+        return !isInCheck(teamColor) && validMoves(king_spot).isEmpty();
     }
 
     /**
