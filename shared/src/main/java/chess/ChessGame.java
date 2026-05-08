@@ -123,8 +123,10 @@ public class ChessGame {
         for (ChessMove moves : validMoves(start)){
             if (moves.equals(move)){
                 move_piece(start, end, board);
+                return;
             }
         }
+        throw new InvalidMoveException();
     }
 
     /**
