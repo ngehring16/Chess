@@ -34,8 +34,12 @@ public class ChessGame {
         return valid_moves.isEmpty();
     }
 
-    public void move_piece(ChessPosition start, ChessPosition end, ChessBoard board){
+    public void move_piece(ChessPosition start, ChessPosition end, ChessBoard board, ChessPiece.PieceType promotion){
+
         ChessPiece piece = board.getPiece(start);
+        if(promotion != null){
+            piece = new ChessPiece(piece.getTeamColor(), promotion);
+        }
         board.addPiece(end, piece);
         board.addPiece(start, null);
     }
@@ -100,7 +104,7 @@ public class ChessGame {
             Collection<ChessMove> attacks = piece.pieceMoves(board, startPosition);
             for (ChessMove move : attacks){
                 ChessBoard cloned_board = (ChessBoard)board.clone();
-                move_piece(move.getStartPosition(), move.getEndPosition(), cloned_board);
+                move_piece(move.getStartPosition(), move.getEndPosition(), cloned_board, move.getPromotionPiece());
                 if (!check_checker(color, cloned_board)){
                    valid_moves.add(move);
                 }
@@ -119,10 +123,22 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
+        ChessPiece.PieceType promotion = move.getPromotionPiece();
         ChessPiece piece = board.getPiece(start);
+        TeamColor enemy = TeamColor.BLACK;
+        if (piece == null){
+            throw new InvalidMoveException();
+        }
+        if (piece.getTeamColor() == TeamColor.BLACK){
+            enemy = TeamColor.WHITE;
+        }
+        if (getTeamTurn() != piece.getTeamColor()){
+            throw new InvalidMoveException();
+        }
         for (ChessMove moves : validMoves(start)){
             if (moves.equals(move)){
-                move_piece(start, end, board);
+                move_piece(start, end, board, promotion);
+                setTeamTurn(enemy);
                 return;
             }
         }
