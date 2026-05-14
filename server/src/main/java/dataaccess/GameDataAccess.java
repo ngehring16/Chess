@@ -4,7 +4,6 @@ import chess.ChessGame;
 import chessrecords.GameData;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class GameDataAccess implements GameInterface {
     private final ArrayList<GameData> gameStorage = new ArrayList<>();
@@ -25,7 +24,9 @@ public class GameDataAccess implements GameInterface {
         return gameStorage;
     }
 
-    public void updategame(){
-
+    public void updategame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game){
+        gameStorage.remove(gameID);
+        GameData updatedGame = new GameData(gameID, whiteUsername, blackUsername, gameName, game);
+        gameStorage.add(gameID, updatedGame);
     }
 }
