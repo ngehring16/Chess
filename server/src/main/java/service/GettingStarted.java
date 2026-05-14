@@ -1,5 +1,6 @@
 package service;
 
+import chessrecords.LoginRequest;
 import chessrecords.RegisterResult;
 import chessrecords.UserData;
 import dataaccess.AuthDataAccess;
@@ -17,6 +18,19 @@ public class GettingStarted {
             return new RegisterResult(user.username(), authToken);
         }
         throw new AlreadyTakenException("This username is already taken");
+    }
+    public RegisterResult login(LoginRequest request) throws DoesNotExistException, DoesNotMatchException{
+        UserData user = dataAccess.getUser(request.username());
+        if (user == null){
+            throw new DoesNotExistException("This username does not exist");
+        }
+        if (user.password().equals(request.password())){
+            String authToken = authAccess.createAuth(user);
+            return new RegisterResult(user.username(), authToken);
+        }
+        else{
+            throw new DoesNotMatchException("This username and password do not match");
+        }
     }
 
 }
