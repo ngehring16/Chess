@@ -9,10 +9,11 @@ public class AuthDataAccess implements AuthInterface {
     private final HashMap<String, AuthData> authStorage = new HashMap<>();
     public AuthDataAccess(){}
 
-    public void createAuth(UserData user){
+    public String createAuth(UserData user){
         String authToken = UUID.randomUUID().toString();
         AuthData auth = new AuthData(authToken, user.username());
         authStorage.put(authToken, auth);
+        return authToken;
     }
 
     public void deleteAuth(AuthData auth){
@@ -21,6 +22,10 @@ public class AuthDataAccess implements AuthInterface {
 
     public AuthData getAuth(String authToken){
         return authStorage.get(authToken);
+    }
+
+    public void clear(){
+        authStorage.clear();
     }
 
 }

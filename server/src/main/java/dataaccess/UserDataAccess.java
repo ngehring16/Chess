@@ -13,7 +13,13 @@ public class UserDataAccess implements UserInterface{
     }
 
     public UserData getUser(String username){
+        if (userStorage.get(username) == null){
+            return null;
+        }
         return userStorage.get(username);
+    }
+    public void clear(){
+        userStorage.clear();
     }
 
 

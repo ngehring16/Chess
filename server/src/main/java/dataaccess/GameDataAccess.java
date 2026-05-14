@@ -29,4 +29,8 @@ public class GameDataAccess implements GameInterface {
         GameData updatedGame = new GameData(gameID, whiteUsername, blackUsername, gameName, game);
         gameStorage.add(gameID, updatedGame);
     }
+
+    public void clear(){
+        gameStorage.clear();
+    }
 }
