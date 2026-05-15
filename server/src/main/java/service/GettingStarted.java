@@ -4,6 +4,7 @@ import chessrecords.LoginRequest;
 import chessrecords.RegisterResult;
 import chessrecords.UserData;
 import dataaccess.AuthDataAccess;
+import dataaccess.DataAccessException;
 import dataaccess.UserDataAccess;
 
 public class GettingStarted {
@@ -11,7 +12,11 @@ public class GettingStarted {
     private final AuthDataAccess authAccess = new AuthDataAccess();
     public GettingStarted(){}
 
-    public RegisterResult register(UserData user) throws AlreadyTakenException{
+    public RegisterResult register(UserData user) throws AlreadyTakenException, DataAccessException{
+        if (user.username() == null || user.password() == null || user.email() == null){
+            throw new DataAccessException("This is an invalid request");
+        }
+
         if (dataAccess.getUser(user.username()) == null){
             dataAccess.create_user(user);
             String authToken = authAccess.createAuth(user);
