@@ -2,13 +2,21 @@ package service;
 
 import chessrecords.AuthData;
 import chessrecords.DoesNotExistException;
-import chessrecords.LogoutRequest;
 import dataaccess.AuthDataAccess;
+import dataaccess.GameDataAccess;
+import dataaccess.UserDataAccess;
 
 public class IsLoggedIn {
-    private final AuthDataAccess authAccess = new AuthDataAccess();
 
-    public IsLoggedIn(){}
+    private final AuthDataAccess authAccess;
+    private final UserDataAccess userAccess;
+    private final GameDataAccess gameAccess;
+
+    public IsLoggedIn(AuthDataAccess authAccess, UserDataAccess userAccess, GameDataAccess gameAccess){
+        this.authAccess = authAccess;
+        this.userAccess = userAccess;
+        this.gameAccess = gameAccess;
+    }
 
     public AuthData isAuthorized(String authToken){
         return authAccess.getAuth(authToken);
@@ -22,7 +30,7 @@ public class IsLoggedIn {
         authAccess.deleteAuth(auth);
     }
 
-    public void list(){}
+    public void list(String request){}
 
     public void create(){}
 

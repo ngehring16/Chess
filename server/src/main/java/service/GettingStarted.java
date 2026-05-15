@@ -3,20 +3,25 @@ package service;
 import chessrecords.*;
 import dataaccess.AuthDataAccess;
 import dataaccess.DataAccessException;
+import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
 
 public class GettingStarted {
-    private final UserDataAccess dataAccess = new UserDataAccess();
-    private final AuthDataAccess authAccess = new AuthDataAccess();
-    public GettingStarted(){}
+    private final AuthDataAccess authAccess;
+    private final UserDataAccess userAccess;
+
+    public GettingStarted(AuthDataAccess authAccess, UserDataAccess userAccess){
+        this.authAccess = authAccess;
+        this.userAccess = userAccess;
+    }
 
     public RegisterResult register(UserData user) throws AlreadyTakenException, DataAccessException{
         if (user.username() == null || user.password() == null || user.email() == null){
             throw new DataAccessException("This is an invalid request");
         }
 
-        if (dataAccess.getUser(user.username()) == null){
-            dataAccess.create_user(user);
+        if (userAccess.getUser(user.username()) == null){
+            userAccess.create_user(user);
             String authToken = authAccess.createAuth(user);
             return new RegisterResult(user.username(), authToken);
         }
@@ -26,7 +31,7 @@ public class GettingStarted {
         if(request.password() == null || request.username() == null){
             throw new DataAccessException("This request is invalid");
         }
-        UserData user = dataAccess.getUser(request.username());
+        UserData user = userAccess.getUser(request.username());
         if (user == null){
             throw new DoesNotExistException("This username does not exist");
         }
