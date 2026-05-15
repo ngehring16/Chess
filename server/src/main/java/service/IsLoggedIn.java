@@ -1,14 +1,11 @@
 package service;
 
 import chess.ChessGame;
-import chess.ChessPiece;
 import chessrecords.*;
 import dataaccess.AuthDataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
-
-import java.util.ArrayList;
 
 public class IsLoggedIn {
 
@@ -53,13 +50,13 @@ public class IsLoggedIn {
         return new ListResult(gameAccess.listGames());
     }
 
-    public CreateResult create(String request, String gameName) throws DoesNotExistException, DataAccessException{
-        if (gameName == null || gameName.isEmpty() || gameName.equals(" ")){
+    public CreateResult create(String authToken, CreateRequest request) throws DoesNotExistException, DataAccessException{
+        if (request.gameName() == null || request.gameName().isEmpty() || request.gameName().equals(" ")){
             throw new DataAccessException("This request is invalid");
         }
-        AuthData auth = authAccess.getAuth(request);
+        AuthData auth = authAccess.getAuth(authToken);
         isAuthorized(auth);
-        GameData game = gameAccess.createGame(gameName);
+        GameData game = gameAccess.createGame(request.gameName());
         return new CreateResult(game.gameID());
 
     }
