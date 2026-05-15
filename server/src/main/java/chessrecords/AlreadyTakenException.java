@@ -1,4 +1,4 @@
-package service;
+package chessrecords;
 
 public class AlreadyTakenException extends Exception {
     public AlreadyTakenException(String message) {

@@ -1,8 +1,6 @@
 package service;
 
-import chessrecords.LoginRequest;
-import chessrecords.RegisterResult;
-import chessrecords.UserData;
+import chessrecords.*;
 import dataaccess.AuthDataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.UserDataAccess;

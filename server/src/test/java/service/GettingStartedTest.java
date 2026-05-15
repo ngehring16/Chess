@@ -1,12 +1,11 @@
 package service;
 
+import chessrecords.AlreadyTakenException;
 import chessrecords.RegisterResult;
 import chessrecords.UserData;
 import dataaccess.DataAccessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GettingStartedTest {
     private final GettingStarted starter = new GettingStarted();
