@@ -25,6 +25,9 @@ public class IsLoggedIn {
         }
     }
     public ChessGame.TeamColor ValidColors(String oldColor, ChessGame.TeamColor team) throws DataAccessException{
+        if (oldColor == null){
+            throw new DataAccessException("This color is invalid");
+        }
         String color = oldColor.toLowerCase();
         if (color.equals("white")){
             team = ChessGame.TeamColor.WHITE;
