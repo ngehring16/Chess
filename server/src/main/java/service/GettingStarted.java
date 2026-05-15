@@ -24,7 +24,10 @@ public class GettingStarted {
         }
         throw new AlreadyTakenException("This username is already taken");
     }
-    public RegisterResult login(LoginRequest request) throws DoesNotExistException, DoesNotMatchException{
+    public RegisterResult login(LoginRequest request) throws DoesNotExistException, DoesNotMatchException, DataAccessException{
+        if(request.password() == null || request.username() == null){
+            throw new DataAccessException("This request is invalid");
+        }
         UserData user = dataAccess.getUser(request.username());
         if (user == null){
             throw new DoesNotExistException("This username does not exist");
