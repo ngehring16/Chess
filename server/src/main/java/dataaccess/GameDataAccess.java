@@ -10,10 +10,11 @@ public class GameDataAccess implements GameInterface {
     private int idCounter = 0;
     public GameDataAccess(){}
 
-    public void createGame(String gameName){
+    public GameData createGame(String gameName){
         GameData new_game = new GameData(idCounter, null, null, gameName, new ChessGame());
         gameStorage.add(idCounter, new_game);
         idCounter++;
+        return new_game;
     }
 
     public GameData getGame(int id){
