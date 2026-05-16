@@ -8,7 +8,7 @@ public class UserDataAccess implements UserInterface{
     private final HashMap<String, UserData> userStorage = new HashMap<>();
     public UserDataAccess(){}
 
-    public void create_user(UserData user){
+    public void createUser(UserData user){
         userStorage.put(user.username(), user);
     }
 

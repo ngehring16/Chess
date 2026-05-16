@@ -25,7 +25,7 @@ public class GettingStarted {
         }
 
         if (userAccess.getUser(user.username()) == null){
-            userAccess.create_user(user);
+            userAccess.createUser(user);
             String authToken = authAccess.createAuth(user);
             return new RegisterResult(user.username(), authToken);
         }

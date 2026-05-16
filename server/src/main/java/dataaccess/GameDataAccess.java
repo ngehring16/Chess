@@ -11,10 +11,10 @@ public class GameDataAccess implements GameInterface {
     public GameDataAccess(){}
 
     public GameData createGame(String gameName){
-        GameData new_game = new GameData(gameIDSource, null, null, gameName, new ChessGame());
-        gameStorage.addLast(new_game);
+        GameData newGame = new GameData(gameIDSource, null, null, gameName, new ChessGame());
+        gameStorage.addLast(newGame);
         gameIDSource++;
-        return new_game;
+        return newGame;
     }
 
     public GameData getGame(int id){
@@ -30,7 +30,7 @@ public class GameDataAccess implements GameInterface {
         return gameStorage;
     }
 
-    public void updategame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game){
+    public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game){
         int index = 0;
         for (int i = 0; i < gameStorage.size(); i++){
             if (gameStorage.get(i).gameID() == gameID){

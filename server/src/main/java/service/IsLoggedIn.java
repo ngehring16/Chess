@@ -26,7 +26,7 @@ public class IsLoggedIn {
             throw new DoesNotExistException("This authToken does not exist");
         }
     }
-    private ChessGame.TeamColor ValidColors(ChessGame.TeamColor team) throws DataAccessException {
+    private ChessGame.TeamColor validColors(ChessGame.TeamColor team) throws DataAccessException {
         if (team == null){
             throw new DataAccessException("This color is invalid");
         }
@@ -56,7 +56,7 @@ public class IsLoggedIn {
     }
 
     public void joinGame(JoinRequest request, String authToken) throws DoesNotExistException, DataAccessException, AlreadyTakenException {
-        ChessGame.TeamColor team = ValidColors(request.playerColor());
+        ChessGame.TeamColor team = validColors(request.playerColor());
         if (request.gameID() <= 0){
             throw new DataAccessException("This gameID is invalid");
         }
@@ -68,10 +68,10 @@ public class IsLoggedIn {
             throw new DataAccessException("This game does not exist");
         }
         if (team == ChessGame.TeamColor.WHITE && game.whiteUsername() == null){
-            gameAccess.updategame(game.gameID(), user.username(), game.blackUsername(), game.gameName(), game.game());
+            gameAccess.updateGame(game.gameID(), user.username(), game.blackUsername(), game.gameName(), game.game());
         }
         else if (team == ChessGame.TeamColor.BLACK && game.blackUsername() == null){
-            gameAccess.updategame(game.gameID(), game.whiteUsername(), user.username(), game.gameName(), game.game());
+            gameAccess.updateGame(game.gameID(), game.whiteUsername(), user.username(), game.gameName(), game.game());
         }
         else{
             throw new AlreadyTakenException("This color is already taken");
