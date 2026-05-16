@@ -1,4 +1,6 @@
 package chessrecords;
 
-public record JoinRequest(String playercolor, int gameID) {
+import chess.ChessGame;
+
+public record JoinRequest(ChessGame.TeamColor playerColor, int gameID) {
 }

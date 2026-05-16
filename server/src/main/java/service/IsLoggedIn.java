@@ -24,22 +24,28 @@ public class IsLoggedIn {
             throw new DoesNotExistException("This authToken does not exist");
         }
     }
-    public ChessGame.TeamColor ValidColors(String oldColor, ChessGame.TeamColor team) throws DataAccessException{
-        if (oldColor == null){
-            throw new DataAccessException("This color is invalid");
-        }
-        String color = oldColor.toLowerCase();
-        if (color.equals("white")){
-            team = ChessGame.TeamColor.WHITE;
-        }
-        else if (color.equals("black")){
-            team = ChessGame.TeamColor.BLACK;
-        }
-        else{
+    public ChessGame.TeamColor ValidColors(ChessGame.TeamColor team) throws DataAccessException{
+        if (team == null){
             throw new DataAccessException("This color is invalid");
         }
         return team;
     }
+//    public ChessGame.TeamColor ValidColors(String oldColor, ChessGame.TeamColor team) throws DataAccessException{
+//        if (oldColor == null){
+//            throw new DataAccessException("This color is invalid");
+//        }
+//        String color = oldColor.toLowerCase();
+//        if (color.equals("white")){
+//            team = ChessGame.TeamColor.WHITE;
+//        }
+//        else if (color.equals("black")){
+//            team = ChessGame.TeamColor.BLACK;
+//        }
+//        else{
+//            throw new DataAccessException("This color is invalid");
+//        }
+//        return team;
+//    }
 
     public void logout(String request) throws DoesNotExistException {
         AuthData auth = authAccess.getAuth(request);
@@ -65,8 +71,7 @@ public class IsLoggedIn {
     }
 
     public void joinGame(JoinRequest request, String authToken) throws DoesNotExistException, DataAccessException, AlreadyTakenException{
-        ChessGame.TeamColor team = null;
-        team = ValidColors(request.playercolor(), team);
+        ChessGame.TeamColor team = ValidColors(request.playerColor());
         AuthData auth = authAccess.getAuth(authToken);
         isAuthorized(auth);
         UserData user = userAccess.getUser(auth.username());

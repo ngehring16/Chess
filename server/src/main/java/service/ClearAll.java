@@ -1,8 +1,5 @@
 package service;
 
-import chessrecords.AuthData;
-import chessrecords.GameData;
-import chessrecords.UserData;
 import dataaccess.AuthDataAccess;
 import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
