@@ -30,23 +30,6 @@ public class IsLoggedIn {
         }
         return team;
     }
-//    public ChessGame.TeamColor ValidColors(String oldColor, ChessGame.TeamColor team) throws DataAccessException{
-//        if (oldColor == null){
-//            throw new DataAccessException("This color is invalid");
-//        }
-//        String color = oldColor.toLowerCase();
-//        if (color.equals("white")){
-//            team = ChessGame.TeamColor.WHITE;
-//        }
-//        else if (color.equals("black")){
-//            team = ChessGame.TeamColor.BLACK;
-//        }
-//        else{
-//            throw new DataAccessException("This color is invalid");
-//        }
-//        return team;
-//    }
-
     public void logout(String request) throws DoesNotExistException {
         AuthData auth = authAccess.getAuth(request);
         isAuthorized(auth);
@@ -72,12 +55,15 @@ public class IsLoggedIn {
 
     public void joinGame(JoinRequest request, String authToken) throws DoesNotExistException, DataAccessException, AlreadyTakenException{
         ChessGame.TeamColor team = ValidColors(request.playerColor());
+        if (request.gameID() <= 0){
+            throw new DataAccessException("This gameID is invalid");
+        }
         AuthData auth = authAccess.getAuth(authToken);
         isAuthorized(auth);
         UserData user = userAccess.getUser(auth.username());
         GameData game = gameAccess.getGame(request.gameID());
         if (game == null) {
-            throw new DoesNotExistException("This game does not exist");
+            throw new DataAccessException("This game does not exist");
         }
         if (team == ChessGame.TeamColor.WHITE && game.whiteUsername() == null){
             gameAccess.updategame(game.gameID(), user.username(), game.blackUsername(), game.gameName(), game.game());
