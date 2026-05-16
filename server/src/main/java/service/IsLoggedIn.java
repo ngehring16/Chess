@@ -19,12 +19,12 @@ public class IsLoggedIn {
         this.gameAccess = gameAccess;
     }
 
-    public void isAuthorized(AuthData auth) throws DoesNotExistException{
+    private void isAuthorized(AuthData auth) throws DoesNotExistException{
         if (auth == null) {
             throw new DoesNotExistException("This authToken does not exist");
         }
     }
-    public ChessGame.TeamColor ValidColors(ChessGame.TeamColor team) throws DataAccessException{
+    private ChessGame.TeamColor ValidColors(ChessGame.TeamColor team) throws DataAccessException{
         if (team == null){
             throw new DataAccessException("This color is invalid");
         }
