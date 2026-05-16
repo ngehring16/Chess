@@ -1,7 +1,7 @@
 package dataaccess;
 
 import chess.ChessGame;
-import chessrecords.GameData;
+import model.chessrecords.GameData;
 
 import java.util.ArrayList;
 

@@ -2,8 +2,8 @@ package dataaccess;
 import java.util.HashMap;
 import java.util.UUID;
 
-import chessrecords.AuthData;
-import chessrecords.UserData;
+import model.chessrecords.AuthData;
+import model.chessrecords.UserData;
 
 public class AuthDataAccess implements AuthInterface {
     private final HashMap<String, AuthData> authStorage = new HashMap<>();

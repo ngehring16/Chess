@@ -1,7 +1,7 @@
 package dataaccess;
 
-import chessrecords.AuthData;
-import chessrecords.UserData;
+import model.chessrecords.AuthData;
+import model.chessrecords.UserData;
 
 public interface AuthInterface {
     public String createAuth(UserData user);

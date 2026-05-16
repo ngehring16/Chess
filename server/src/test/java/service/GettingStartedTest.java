@@ -1,6 +1,8 @@
 package service;
 
-import chessrecords.*;
+import model.chessrecords.LoginRequest;
+import model.chessrecords.RegisterResult;
+import model.chessrecords.UserData;
 import dataaccess.AuthDataAccess;
 import dataaccess.UserDataAccess;
 import org.junit.jupiter.api.Assertions;

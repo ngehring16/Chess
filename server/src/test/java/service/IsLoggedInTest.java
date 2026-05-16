@@ -1,7 +1,7 @@
 package service;
 
 import chess.ChessGame;
-import chessrecords.*;
+import model.chessrecords.*;
 import dataaccess.AuthDataAccess;
 import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;

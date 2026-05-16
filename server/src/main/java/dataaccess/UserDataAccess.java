@@ -1,6 +1,6 @@
 package dataaccess;
 
-import chessrecords.UserData;
+import model.chessrecords.UserData;
 
 import java.util.HashMap;
 

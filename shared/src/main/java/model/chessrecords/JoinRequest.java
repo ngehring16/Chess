@@ -1,4 +1,4 @@
-package chessrecords;
+package model.chessrecords;
 
 import chess.ChessGame;
 

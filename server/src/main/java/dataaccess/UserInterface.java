@@ -1,6 +1,6 @@
 package dataaccess;
 
-import chessrecords.UserData;
+import model.chessrecords.UserData;
 
 public interface UserInterface {
     public void create_user(UserData user);

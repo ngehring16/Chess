@@ -1,6 +1,8 @@
 package service;
 
-import chessrecords.*;
+import model.chessrecords.CreateRequest;
+import model.chessrecords.RegisterResult;
+import model.chessrecords.UserData;
 import dataaccess.AuthDataAccess;
 import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
