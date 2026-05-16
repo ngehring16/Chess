@@ -5,6 +5,9 @@ import model.chessrecords.*;
 import dataaccess.AuthDataAccess;
 import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
+import server.AlreadyTakenException;
+import server.DataAccessException;
+import server.DoesNotExistException;
 
 public class IsLoggedIn {
 
@@ -18,12 +21,12 @@ public class IsLoggedIn {
         this.gameAccess = gameAccess;
     }
 
-    private void isAuthorized(AuthData auth) throws DoesNotExistException{
+    private void isAuthorized(AuthData auth) throws DoesNotExistException {
         if (auth == null) {
             throw new DoesNotExistException("This authToken does not exist");
         }
     }
-    private ChessGame.TeamColor ValidColors(ChessGame.TeamColor team) throws DataAccessException{
+    private ChessGame.TeamColor ValidColors(ChessGame.TeamColor team) throws DataAccessException {
         if (team == null){
             throw new DataAccessException("This color is invalid");
         }
@@ -52,7 +55,7 @@ public class IsLoggedIn {
 
     }
 
-    public void joinGame(JoinRequest request, String authToken) throws DoesNotExistException, DataAccessException, AlreadyTakenException{
+    public void joinGame(JoinRequest request, String authToken) throws DoesNotExistException, DataAccessException, AlreadyTakenException {
         ChessGame.TeamColor team = ValidColors(request.playerColor());
         if (request.gameID() <= 0){
             throw new DataAccessException("This gameID is invalid");

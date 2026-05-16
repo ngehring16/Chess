@@ -8,6 +8,9 @@ import dataaccess.UserDataAccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import server.AlreadyTakenException;
+import server.DataAccessException;
+import server.DoesNotExistException;
 
 class IsLoggedInTest {
     private final AuthDataAccess authAccess = new AuthDataAccess();
@@ -19,7 +22,7 @@ class IsLoggedInTest {
     private RegisterResult result = null;
 
     @BeforeEach
-    public void setup() throws AlreadyTakenException, DataAccessException{
+    public void setup() throws AlreadyTakenException, DataAccessException {
         ClearAll clearer = new ClearAll(userAccess, authAccess, gameAccess);
         clearer.clear();
         result = starter.register(user);

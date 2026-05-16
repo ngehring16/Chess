@@ -5,6 +5,10 @@ import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
 import dataaccess.AuthDataAccess;
 import dataaccess.UserDataAccess;
+import server.AlreadyTakenException;
+import server.DataAccessException;
+import server.DoesNotExistException;
+import server.DoesNotMatchException;
 
 public class GettingStarted {
     private final AuthDataAccess authAccess;
@@ -15,7 +19,7 @@ public class GettingStarted {
         this.userAccess = userAccess;
     }
 
-    public RegisterResult register(UserData user) throws AlreadyTakenException, DataAccessException{
+    public RegisterResult register(UserData user) throws AlreadyTakenException, DataAccessException {
         if (user.username() == null || user.password() == null || user.email() == null){
             throw new DataAccessException("This is an invalid request");
         }

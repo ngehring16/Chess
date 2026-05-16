@@ -7,6 +7,10 @@ import dataaccess.AuthDataAccess;
 import dataaccess.UserDataAccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import server.AlreadyTakenException;
+import server.DataAccessException;
+import server.DoesNotExistException;
+import server.DoesNotMatchException;
 
 class GettingStartedTest {
     private final AuthDataAccess authAccess = new AuthDataAccess();
