@@ -2,8 +2,6 @@ package service;
 
 import chessrecords.*;
 import dataaccess.AuthDataAccess;
-import dataaccess.DataAccessException;
-import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
 
 public class GettingStarted {

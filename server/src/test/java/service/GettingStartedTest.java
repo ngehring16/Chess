@@ -2,7 +2,6 @@ package service;
 
 import chessrecords.*;
 import dataaccess.AuthDataAccess;
-import dataaccess.DataAccessException;
 import dataaccess.UserDataAccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
