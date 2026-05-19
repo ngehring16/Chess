@@ -1,20 +1,20 @@
 package service;
 
+import dataaccess.AuthInterface;
+import dataaccess.UserInterface;
 import model.chessrecords.LoginRequest;
 import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
-import dataaccess.AuthDataAccess;
-import dataaccess.UserDataAccess;
 import server.AlreadyTakenException;
 import server.DataAccessException;
 import server.DoesNotExistException;
 import server.DoesNotMatchException;
 
 public class GettingStarted {
-    private final AuthDataAccess authAccess;
-    private final UserDataAccess userAccess;
+    private final AuthInterface authAccess;
+    private final UserInterface userAccess;
 
-    public GettingStarted(AuthDataAccess authAccess, UserDataAccess userAccess){
+    public GettingStarted(AuthInterface authAccess, UserInterface userAccess){
         this.authAccess = authAccess;
         this.userAccess = userAccess;
     }

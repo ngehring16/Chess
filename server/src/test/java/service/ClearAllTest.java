@@ -1,11 +1,9 @@
 package service;
 
+import dataaccess.*;
 import model.chessrecords.CreateRequest;
 import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
-import dataaccess.AuthDataAccess;
-import dataaccess.GameDataAccess;
-import dataaccess.UserDataAccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,9 +13,9 @@ import server.DoesNotExistException;
 import server.DoesNotMatchException;
 
 class ClearAllTest {
-    private final AuthDataAccess authAccess = new AuthDataAccess();
-    private final UserDataAccess userAccess = new UserDataAccess();
-    private final GameDataAccess gameAccess = new GameDataAccess();
+    private final AuthInterface authAccess = new AuthDataAccess();
+    private final UserInterface userAccess = new UserDataAccess();
+    private final GameInterface gameAccess = new GameDataAccess();
     private final ClearAll clearer = new ClearAll(userAccess, authAccess, gameAccess);
     private final GettingStarted starter = new GettingStarted(authAccess, userAccess);
     private final IsLoggedIn logged = new IsLoggedIn(authAccess, userAccess, gameAccess);

@@ -1,5 +1,7 @@
 package service;
 
+import dataaccess.AuthInterface;
+import dataaccess.UserInterface;
 import model.chessrecords.LoginRequest;
 import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
@@ -13,8 +15,8 @@ import server.DoesNotExistException;
 import server.DoesNotMatchException;
 
 class GettingStartedTest {
-    private final AuthDataAccess authAccess = new AuthDataAccess();
-    private final UserDataAccess userAccess = new UserDataAccess();
+    private final AuthInterface authAccess = new AuthDataAccess();
+    private final UserInterface userAccess = new UserDataAccess();
     private final GettingStarted starter = new GettingStarted(authAccess, userAccess);
     private final UserData user = new UserData("ngehring", "password", "hello@gmail.com");
     @Test

@@ -1,21 +1,19 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.*;
 import model.chessrecords.*;
-import dataaccess.AuthDataAccess;
-import dataaccess.GameDataAccess;
-import dataaccess.UserDataAccess;
 import server.AlreadyTakenException;
 import server.DataAccessException;
 import server.DoesNotExistException;
 
 public class IsLoggedIn {
 
-    private final AuthDataAccess authAccess;
-    private final UserDataAccess userAccess;
-    private final GameDataAccess gameAccess;
+    private final AuthInterface authAccess;
+    private final UserInterface userAccess;
+    private final GameInterface gameAccess;
 
-    public IsLoggedIn(AuthDataAccess authAccess, UserDataAccess userAccess, GameDataAccess gameAccess){
+    public IsLoggedIn(AuthInterface authAccess, UserInterface userAccess, GameInterface gameAccess){
         this.authAccess = authAccess;
         this.userAccess = userAccess;
         this.gameAccess = gameAccess;

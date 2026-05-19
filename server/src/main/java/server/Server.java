@@ -1,10 +1,8 @@
 package server;
 
+import dataaccess.*;
 import model.chessrecords.*;
 import com.google.gson.Gson;
-import dataaccess.AuthDataAccess;
-import dataaccess.GameDataAccess;
-import dataaccess.UserDataAccess;
 import io.javalin.*;
 import io.javalin.http.Context;
 import service.*;
@@ -12,14 +10,24 @@ import service.*;
 public class Server {
 
     private final Javalin javalin;
-    private final AuthDataAccess authAccess = new AuthDataAccess();
-    private final UserDataAccess userAccess = new UserDataAccess();
-    private final GameDataAccess gameAccess = new GameDataAccess();
+    private final AuthInterface authAccess = new AuthDataAccess();
+    private final UserInterface userAccess = new UserDataAccess();
+    private final GameInterface gameAccess = new GameDataAccess();
     private final GettingStarted starter = new GettingStarted(authAccess, userAccess);
     private final IsLoggedIn loggedIn = new IsLoggedIn(authAccess, userAccess, gameAccess);
     private final ClearAll clearer = new ClearAll(userAccess, authAccess, gameAccess);
 
     public Server() {
+        AuthInterface authAccess;
+        UserInterface userAccess;
+        GameInterface gameAccess;
+        try{
+            authAccess = new SQLAuthDataAccess();
+        }
+        catch (DataAccessException ex){
+            authAccess = new AuthDataAccess();
+        }
+
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.post("/user", this::register);
         javalin.post("/session", this::login );

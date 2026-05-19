@@ -1,10 +1,8 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.*;
 import model.chessrecords.*;
-import dataaccess.AuthDataAccess;
-import dataaccess.GameDataAccess;
-import dataaccess.UserDataAccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +11,9 @@ import server.DataAccessException;
 import server.DoesNotExistException;
 
 class IsLoggedInTest {
-    private final AuthDataAccess authAccess = new AuthDataAccess();
-    private final UserDataAccess userAccess = new UserDataAccess();
-    private final GameDataAccess gameAccess = new GameDataAccess();
+    private final AuthInterface authAccess = new AuthDataAccess();
+    private final UserInterface userAccess = new UserDataAccess();
+    private final GameInterface gameAccess = new GameDataAccess();
     private final GettingStarted starter = new GettingStarted(authAccess, userAccess);
     private final IsLoggedIn logged = new IsLoggedIn(authAccess, userAccess, gameAccess);
     private final UserData user = new UserData("ngehring", "password", "hello@gmail.com");
