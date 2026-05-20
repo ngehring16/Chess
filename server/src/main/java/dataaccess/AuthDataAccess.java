@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import model.chessrecords.AuthData;
 import model.chessrecords.UserData;
+import server.DataAccessException;
 
 public class AuthDataAccess implements AuthInterface {
     private final HashMap<String, AuthData> authStorage = new HashMap<>();
@@ -20,7 +21,7 @@ public class AuthDataAccess implements AuthInterface {
         authStorage.remove(auth.authToken());
     }
 
-    public AuthData getAuth(String authToken){
+    public AuthData getAuth(String authToken) throws DataAccessException {
         return authStorage.get(authToken);
     }
 

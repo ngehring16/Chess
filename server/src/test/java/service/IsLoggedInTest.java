@@ -27,7 +27,7 @@ class IsLoggedInTest {
     }
 
     @Test
-    public void logoutPositiveAuthTokenIsDeleted() throws DoesNotExistException {
+    public void logoutPositiveAuthTokenIsDeleted() throws DoesNotExistException, DataAccessException {
         logged.logout(result.authToken());
         Assertions.assertNull(authAccess.getAuth(result.authToken()));
     }

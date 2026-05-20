@@ -30,14 +30,19 @@ public class IsLoggedIn {
         }
         return team;
     }
-    public void logout(String request) throws DoesNotExistException {
+    public void logout(String request) throws DoesNotExistException, DataAccessException {
         AuthData auth = authAccess.getAuth(request);
         isAuthorized(auth);
         authAccess.deleteAuth(auth);
     }
 
     public ListResult list(String request) throws DoesNotExistException{
-        AuthData auth = authAccess.getAuth(request);
+        AuthData auth = null;
+        try {
+            auth = authAccess.getAuth(request);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         isAuthorized(auth);
         return new ListResult(gameAccess.listGames());
     }

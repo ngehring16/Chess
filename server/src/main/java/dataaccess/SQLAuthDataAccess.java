@@ -5,6 +5,7 @@ import model.chessrecords.UserData;
 import server.DataAccessException;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -29,9 +30,37 @@ public class SQLAuthDataAccess implements AuthInterface{
         }
         return authToken;
     }
-    public void deleteAuth(AuthData auth){}
-    public AuthData getAuth(String authToken){
-        return null;
+    public void deleteAuth(AuthData auth) throws DataAccessException{
+        var statement = "DELETE FROM authStorage WHERE authToken = ?";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, auth.authToken());
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to delete authData: %s", ex.getMessage()));
+        }
+    }
+    public AuthData getAuth(String authToken) throws DataAccessException {
+        String confirmedToken = "";
+        String username = "";
+        var statement = "SELECT authToken, username FROM authStorage WHERE authToken = ?";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, authToken);
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    while (rs.next()){
+                        confirmedToken = rs.getString("authToken");
+                        username = rs.getString("username");
+                    }
+                    return new AuthData(confirmedToken, username);
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to retrieve authData: %s", ex.getMessage()));
+        }
     }
     public void clear(){}
 

@@ -38,8 +38,16 @@ class ClearAllTest {
     @Test
     void clearPositive(){
         clearer.clear();
-        Assertions.assertNull(authAccess.getAuth(user1.authToken()));
-        Assertions.assertNull(authAccess.getAuth(user2.authToken()));
+        try {
+            Assertions.assertNull(authAccess.getAuth(user1.authToken()));
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            Assertions.assertNull(authAccess.getAuth(user2.authToken()));
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
         Assertions.assertThrows(DoesNotExistException.class,
                 ()->{logged.list(user1.authToken());});
     }

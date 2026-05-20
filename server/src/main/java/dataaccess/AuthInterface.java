@@ -6,7 +6,7 @@ import server.DataAccessException;
 
 public interface AuthInterface {
     public String createAuth(UserData user) throws DataAccessException;
-    public void deleteAuth(AuthData auth);
-    public AuthData getAuth(String authToken);
+    public void deleteAuth(AuthData auth) throws DataAccessException;
+    public AuthData getAuth(String authToken) throws DataAccessException;
     public void clear();
 }

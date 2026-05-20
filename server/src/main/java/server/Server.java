@@ -18,15 +18,15 @@ public class Server {
     private final ClearAll clearer = new ClearAll(userAccess, authAccess, gameAccess);
 
     public Server() {
-        AuthInterface authAccess;
-        UserInterface userAccess;
-        GameInterface gameAccess;
-        try{
-            authAccess = new SQLAuthDataAccess();
-        }
-        catch (DataAccessException ex){
-            authAccess = new AuthDataAccess();
-        }
+//        AuthInterface authAccess;
+//        UserInterface userAccess;
+//        GameInterface gameAccess;
+//        try{
+//            authAccess = new SQLAuthDataAccess();
+//        }
+//        catch (DataAccessException ex){
+//            authAccess = new AuthDataAccess();
+//        }
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.post("/user", this::register);
