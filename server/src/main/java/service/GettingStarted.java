@@ -5,6 +5,7 @@ import dataaccess.UserInterface;
 import model.chessrecords.LoginRequest;
 import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import server.AlreadyTakenException;
 import server.DataAccessException;
 import server.DoesNotExistException;
@@ -39,7 +40,8 @@ public class GettingStarted {
         if (user == null){
             throw new DoesNotExistException("This username does not exist");
         }
-        if (user.password().equals(request.password())){
+        String requestPassword = BCrypt.hashpw(request.password(), BCrypt.gensalt());
+        if (user.password().equals(requestPassword)){
             String authToken = authAccess.createAuth(user);
             return new RegisterResult(user.username(), authToken);
         }

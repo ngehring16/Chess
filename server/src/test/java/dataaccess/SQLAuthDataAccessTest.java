@@ -33,7 +33,7 @@ class SQLAuthDataAccessTest {
     @Test
     void createAuthNegative(){
         Assertions.assertThrows(DataAccessException.class,
-                ()->{authAccess.createAuth(nullUser);});
+                ()-> authAccess.createAuth(nullUser));
 
     }
 
@@ -42,7 +42,7 @@ class SQLAuthDataAccessTest {
         String authToken2 = authAccess.createAuth(user2);
         AuthData authStored2 = authAccess.getAuth(authToken2);
         authAccess.deleteAuth(authStored2);
-        Assertions.assertThrows(DataAccessException.class, ()->{authAccess.getAuth(authToken2);});
+        Assertions.assertThrows(DataAccessException.class, ()-> authAccess.getAuth(authToken2));
     }
 
     @Test
@@ -66,7 +66,7 @@ class SQLAuthDataAccessTest {
     @Test
     void getAuthNegative(){
         Assertions.assertThrows(DataAccessException.class,
-                ()->{authAccess.getAuth("falseTokenLOL");});
+                ()->authAccess.getAuth("falseTokenLOL"));
     }
 
     @Test
@@ -74,6 +74,6 @@ class SQLAuthDataAccessTest {
         String authToken = authAccess.createAuth(user);
         String authToken2 = authAccess.createAuth(user2);
         authAccess.clear();
-        Assertions.assertThrows(DataAccessException.class, ()->{authAccess.getAuth(authToken);});
+        Assertions.assertThrows(DataAccessException.class, ()->authAccess.getAuth(authToken));
     }
 }

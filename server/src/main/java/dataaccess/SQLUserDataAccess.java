@@ -5,6 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import server.DataAccessException;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLUserDataAccess implements UserInterface{
@@ -28,10 +29,24 @@ public class SQLUserDataAccess implements UserInterface{
         }
     }
 
-    public UserData getUser(String username) {
-        return null;
+    public UserData getUser(String username) throws DataAccessException{
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT username, password, email FROM userStorage WHERE username=?";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.setString(1, username);
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    if(rs.next()){
+                        return new UserData(rs.getString("username"),
+                                rs.getString("password"), rs.getString("email"));
+                    }
+                    throw new DataAccessException("This username is invalid");
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to add to userStorage: %s", ex.getMessage()));
+        }
     }
-
     public void clear() {
 
     }
@@ -42,7 +57,7 @@ public class SQLUserDataAccess implements UserInterface{
             `username` varchar(256) NOT NULL,
             `password` varchar(256) NOT NULL,
             `email` varchar(256) NOT NULL,
-            PRIMARY KEY (`password`)
+            PRIMARY KEY (`username`)
             )
             """;
         DatabaseManager.createDatabase();

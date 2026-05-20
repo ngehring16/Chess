@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.chessrecords.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.HashMap;
 
