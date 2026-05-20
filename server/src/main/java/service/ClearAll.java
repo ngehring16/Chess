@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.*;
+import server.DataAccessException;
 
 public class ClearAll {
     private final UserInterface userAccess;
@@ -12,7 +13,7 @@ public class ClearAll {
         this.gameAccess = gameAccess;
     }
 
-    public void clear(){
+    public void clear() throws DataAccessException {
         userAccess.clear();
         authAccess.clear();
         gameAccess.clear();

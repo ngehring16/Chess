@@ -36,7 +36,7 @@ class ClearAllTest {
     }
 
     @Test
-    void clearPositive(){
+    void clearPositive() throws DataAccessException{
         clearer.clear();
         try {
             Assertions.assertNull(authAccess.getAuth(user1.authToken()));

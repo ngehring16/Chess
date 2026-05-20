@@ -43,18 +43,15 @@ public class SQLAuthDataAccess implements AuthInterface{
         }
     }
     public AuthData getAuth(String authToken) throws DataAccessException {
-        String confirmedToken = "";
-        String username = "";
-        var statement = "SELECT authToken, username FROM authStorage WHERE authToken = ?";
         try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT authToken, username FROM authStorage WHERE authToken=?";
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.setString(1, authToken);
                 try (ResultSet rs = preparedStatement.executeQuery()) {
-                    while (rs.next()){
-                        confirmedToken = rs.getString("authToken");
-                        username = rs.getString("username");
+                    if (rs.next()){
+                        return new AuthData(rs.getString("authToken"), rs.getString("username"));
                     }
-                    return new AuthData(confirmedToken, username);
+                    throw new DataAccessException("This AuthToken is invalid");
                 }
             }
         }
@@ -62,7 +59,17 @@ public class SQLAuthDataAccess implements AuthInterface{
             throw new DataAccessException(String.format("Failed to retrieve authData: %s", ex.getMessage()));
         }
     }
-    public void clear(){}
+    public void clear() throws DataAccessException{
+        var statement = "TRUNCATE TABLE authStorage";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate(statement);
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to Delete Database: %s", ex.getMessage()));
+        }
+    }
 
     private final String createStatement =
             """
