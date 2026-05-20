@@ -23,6 +23,8 @@ public class Server {
 //        GameInterface gameAccess;
 //        try{
 //            authAccess = new SQLAuthDataAccess();
+//            userAccess = new SQLUserDataAccess();
+//            gameAccess = new SQLGameDataAccess();
 //        }
 //        catch (DataAccessException ex){
 //            authAccess = new AuthDataAccess();
