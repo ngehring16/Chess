@@ -41,14 +41,21 @@ class SQLUserDataAccessTest {
 
     @Test
     void getUserPositive() throws DataAccessException{
-
+        userAccess.createUser(user2);
+        Assertions.assertEquals(user2.email(), userAccess.getUser(user2.username()).email());
     }
 
     @Test
-    void getUserNegative() throws DataAccessException{
+    void getUserNegative(){
+        Assertions.assertThrows(DataAccessException.class,
+                ()-> userAccess.getUser("doesNotExist"));
     }
 
     @Test
     void clear() throws DataAccessException{
+        userAccess.createUser(user);
+        userAccess.createUser(user2);
+        userAccess.clear();
+        Assertions.assertThrows(DataAccessException.class, ()->userAccess.getUser(user.username()));
     }
 }
