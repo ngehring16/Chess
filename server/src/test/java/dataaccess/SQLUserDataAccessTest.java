@@ -29,11 +29,23 @@ class SQLUserDataAccessTest {
     @Test
     void createUserPositive() throws DataAccessException{
         userAccess.createUser(user);
-        Assertions.assertTrue(BCrypt.checkpw(user.password(), userAccess.getUser(user.username()).password()));
+        Assertions.assertTrue(BCrypt.checkpw(user.password(),
+                userAccess.getUser(user.username()).password()));
     }
 
     @Test
-    void getUser() throws DataAccessException{
+    void createUserNegative(){
+        Assertions.assertThrows(DataAccessException.class,
+                ()-> userAccess.createUser(nullUser));
+    }
+
+    @Test
+    void getUserPositive() throws DataAccessException{
+
+    }
+
+    @Test
+    void getUserNegative() throws DataAccessException{
     }
 
     @Test

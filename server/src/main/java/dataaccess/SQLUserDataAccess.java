@@ -44,11 +44,19 @@ public class SQLUserDataAccess implements UserInterface{
             }
         }
         catch (SQLException ex) {
-            throw new DataAccessException(String.format("Failed to add to userStorage: %s", ex.getMessage()));
+            throw new DataAccessException(String.format("Failed to retrieve from userStorage: %s", ex.getMessage()));
         }
     }
-    public void clear() {
-
+    public void clear() throws DataAccessException{
+        var statement = "TRUNCATE TABLE userStorage";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate(statement);
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to Delete Database: %s", ex.getMessage()));
+        }
     }
 
     private void configureDatabase() throws DataAccessException {
