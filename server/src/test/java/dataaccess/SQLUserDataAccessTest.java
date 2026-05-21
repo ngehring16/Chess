@@ -15,7 +15,7 @@ class SQLUserDataAccessTest {
     private static UserInterface userAccess;
 
     @BeforeAll
-    public static void setup() throws DataAccessException, IllegalAccessException {
+    public static void setup() throws Exception {
         userAccess = new SQLUserDataAccess();
     }
 

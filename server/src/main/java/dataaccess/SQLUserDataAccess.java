@@ -9,8 +9,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLUserDataAccess implements UserInterface{
-    public SQLUserDataAccess() throws DataAccessException, IllegalAccessException{
+    public SQLUserDataAccess() throws Exception{
         configureDatabase();
+    }
+
+    private void connect(String statement) throws Exception {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
+            }
+
+        } catch (SQLException ex) {
+            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+        }
+        catch (DataAccessException dae) {
+            throw new IllegalAccessException("Failed to connect to the DataBase");
+        }
     }
 
     public void createUser(UserData user) throws DataAccessException, IllegalAccessException {
@@ -68,7 +82,7 @@ public class SQLUserDataAccess implements UserInterface{
         }
     }
 
-    private void configureDatabase() throws DataAccessException, IllegalAccessException {
+    private void configureDatabase() throws Exception {
         String createStatement =  """
             CREATE TABLE IF NOT EXISTS userStorage (
             `username` varchar(256) NOT NULL,
@@ -78,16 +92,6 @@ public class SQLUserDataAccess implements UserInterface{
             )
             """;
         DatabaseManager.createDatabase();
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (var preparedStatement = conn.prepareStatement(createStatement)) {
-                preparedStatement.executeUpdate();
-            }
-
-        } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
-        }
-        catch (DataAccessException dae) {
-            throw new IllegalAccessException("Failed to connect to the DataBase");
-        }
+        connect(createStatement);
     }
 }
