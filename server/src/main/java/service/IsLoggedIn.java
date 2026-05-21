@@ -36,7 +36,7 @@ public class IsLoggedIn {
         authAccess.deleteAuth(auth);
     }
 
-    public ListResult list(String request) throws DoesNotExistException{
+    public ListResult list(String request) throws DoesNotExistException, DataAccessException{
         AuthData auth = null;
         try {
             auth = authAccess.getAuth(request);

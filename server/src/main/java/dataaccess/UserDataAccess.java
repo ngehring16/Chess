@@ -10,6 +10,8 @@ public class UserDataAccess implements UserInterface{
     public UserDataAccess(){}
 
     public void createUser(UserData user){
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        user = new UserData(user.username(), hashedPassword, user.email());
         userStorage.put(user.username(), user);
     }
 

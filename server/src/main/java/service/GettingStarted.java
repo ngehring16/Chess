@@ -40,7 +40,7 @@ public class GettingStarted {
         if (user == null){
             throw new DoesNotExistException("This username does not exist");
         }
-        if (BCrypt.checkpw(user.password(), request.password())){
+        if (BCrypt.checkpw(request.password(), user.password())){
             String authToken = authAccess.createAuth(user);
             return new RegisterResult(user.username(), authToken);
         }

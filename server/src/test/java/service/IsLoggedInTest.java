@@ -46,7 +46,7 @@ class IsLoggedInTest {
     }
 
     @Test
-    void listNegativeSizeStays()throws DoesNotExistException{
+    void listNegativeSizeStays()throws DoesNotExistException, DataAccessException{
         Assertions.assertThrows(DataAccessException.class,
                 ()->{logged.create(result.authToken(), new CreateRequest(null));});
         Assertions.assertThrows(DoesNotExistException.class,

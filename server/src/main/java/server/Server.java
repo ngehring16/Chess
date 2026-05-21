@@ -28,6 +28,7 @@ public class Server {
 //        }
 //        catch (DataAccessException ex){
 //            authAccess = new AuthDataAccess();
+
 //        }
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
