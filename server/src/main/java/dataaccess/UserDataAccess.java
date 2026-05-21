@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.chessrecords.UserData;
 import org.mindrot.jbcrypt.BCrypt;
+import server.DataAccessException;
 
 import java.util.HashMap;
 
@@ -21,7 +22,7 @@ public class UserDataAccess implements UserInterface{
         }
         return userStorage.get(username);
     }
-    public void clear(){
+    public void clear() throws DataAccessException, IllegalAccessException {
         userStorage.clear();
     }
 

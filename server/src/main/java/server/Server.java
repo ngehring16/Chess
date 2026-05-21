@@ -10,26 +10,28 @@ import service.*;
 public class Server {
 
     private final Javalin javalin;
-    private final AuthInterface authAccess = new AuthDataAccess();
-    private final UserInterface userAccess = new UserDataAccess();
-    private final GameInterface gameAccess = new GameDataAccess();
-    private final GettingStarted starter = new GettingStarted(authAccess, userAccess);
-    private final IsLoggedIn loggedIn = new IsLoggedIn(authAccess, userAccess, gameAccess);
-    private final ClearAll clearer = new ClearAll(userAccess, authAccess, gameAccess);
+    private final GettingStarted starter;
+    private final IsLoggedIn loggedIn;
+    private final ClearAll clearer;
 
     public Server() {
-//        AuthInterface authAccess;
-//        UserInterface userAccess;
-//        GameInterface gameAccess;
-//        try{
-//            authAccess = new SQLAuthDataAccess();
-//            userAccess = new SQLUserDataAccess();
-//            gameAccess = new SQLGameDataAccess();
-//        }
-//        catch (DataAccessException ex){
-//            authAccess = new AuthDataAccess();
+        AuthInterface authAccess;
+        UserInterface userAccess;
+        GameInterface gameAccess;
+        try{
+            authAccess = new SQLAuthDataAccess();
+            userAccess = new SQLUserDataAccess();
+            gameAccess = new SQLGameDataAccess();
+        }
+        catch (Exception ex){
+           authAccess = new AuthDataAccess();
+           userAccess = new UserDataAccess();
+           gameAccess = new GameDataAccess();
 
-//        }
+        }
+        starter = new GettingStarted(authAccess, userAccess);
+        loggedIn = new IsLoggedIn(authAccess, userAccess, gameAccess);
+        clearer = new ClearAll(userAccess, authAccess, gameAccess);
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.post("/user", this::register);
@@ -90,6 +92,10 @@ public class Server {
         }
         catch(DoesNotExistException E){
             cxt.result(new Gson().toJson(new ErrorMessage("Error: unauthorized")));
+            cxt.status(401);
+        }
+        catch (DataAccessException G){
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: bad request")));
             cxt.status(401);
         }
         catch(Exception H){

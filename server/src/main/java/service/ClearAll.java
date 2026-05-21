@@ -13,8 +13,12 @@ public class ClearAll {
         this.gameAccess = gameAccess;
     }
 
-    public void clear() throws DataAccessException {
-        userAccess.clear();
+    public void clear() throws Exception {
+        try {
+            userAccess.clear();
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
         authAccess.clear();
         gameAccess.clear();
     }

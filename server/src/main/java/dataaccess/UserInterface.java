@@ -4,7 +4,7 @@ import model.chessrecords.UserData;
 import server.DataAccessException;
 
 public interface UserInterface {
-    public void createUser(UserData user) throws DataAccessException;
-    public UserData getUser(String username) throws DataAccessException;
-    public void clear() throws DataAccessException;
+    public void createUser(UserData user) throws DataAccessException, IllegalAccessException;
+    public UserData getUser(String username) throws DataAccessException, IllegalAccessException;
+    public void clear() throws DataAccessException, IllegalAccessException;
 }

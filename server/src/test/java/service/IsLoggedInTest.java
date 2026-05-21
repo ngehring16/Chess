@@ -20,25 +20,25 @@ class IsLoggedInTest {
     private RegisterResult result = null;
 
     @BeforeEach
-    public void setup() throws AlreadyTakenException, DataAccessException {
+    public void setup() throws Exception {
         ClearAll clearer = new ClearAll(userAccess, authAccess, gameAccess);
         clearer.clear();
         result = starter.register(user);
     }
 
     @Test
-    public void logoutPositiveAuthTokenIsDeleted() throws DoesNotExistException, DataAccessException {
+    public void logoutPositiveAuthTokenIsDeleted() throws Exception {
         logged.logout(result.authToken());
         Assertions.assertNull(authAccess.getAuth(result.authToken()));
     }
 
     @Test
     public void logoutNegativeBadToken(){
-        Assertions.assertThrows(DoesNotExistException.class, ()->{logged.logout("hyyfkj_uebnaksu_poakbe");});
+        Assertions.assertThrows(DataAccessException.class, ()->{logged.logout("hyyfkj_uebnaksu_poakbe");});
     }
 
     @Test
-    void listPositiveSizeGrows() throws DataAccessException, DoesNotExistException{
+    void listPositiveSizeGrows() throws Exception{
         logged.create(result.authToken(), new CreateRequest("new_game"));
         logged.create(result.authToken(), new CreateRequest("newer_game"));
         ListResult result1 = logged.list(result.authToken());
@@ -46,17 +46,17 @@ class IsLoggedInTest {
     }
 
     @Test
-    void listNegativeSizeStays()throws DoesNotExistException, DataAccessException{
+    void listNegativeSizeStays()throws Exception{
         Assertions.assertThrows(DataAccessException.class,
                 ()->{logged.create(result.authToken(), new CreateRequest(null));});
-        Assertions.assertThrows(DoesNotExistException.class,
+        Assertions.assertThrows(DataAccessException.class,
                 ()->{logged.create("my_authToken_is_valid", new CreateRequest("my_valid_game"));});
         ListResult result1 = logged.list(result.authToken());
         Assertions.assertEquals(0, result1.games().size());
     }
 
     @Test
-    void createPositiveDifferentID() throws DataAccessException, DoesNotExistException {
+    void createPositiveDifferentID() throws Exception{
         CreateResult game1 = logged.create(result.authToken(), new CreateRequest("game1"));
         CreateResult game2 = logged.create(result.authToken(), new CreateRequest("game2"));
         Assertions.assertNotEquals(game1.gameID(), game2.gameID());
@@ -64,12 +64,12 @@ class IsLoggedInTest {
 
     @Test
     void createNegativeBadToken(){
-        Assertions.assertThrows(DoesNotExistException.class,
+        Assertions.assertThrows(DataAccessException.class,
                 ()->{logged.create("fake_token", new CreateRequest("game1"));});
     }
 
     @Test
-    void joinGamePositiveCorrectTeam() throws DataAccessException, DoesNotExistException, AlreadyTakenException{
+    void joinGamePositiveCorrectTeam() throws Exception{
         logged.create(result.authToken(), new CreateRequest("game1"));
         CreateResult game2 = logged.create(result.authToken(), new CreateRequest("game2"));
         logged.joinGame(new JoinRequest(ChessGame.TeamColor.WHITE, game2.gameID()), result.authToken());

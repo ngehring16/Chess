@@ -7,6 +7,8 @@ import server.AlreadyTakenException;
 import server.DataAccessException;
 import server.DoesNotExistException;
 
+import javax.xml.crypto.Data;
+
 public class IsLoggedIn {
 
     private final AuthInterface authAccess;
@@ -19,9 +21,9 @@ public class IsLoggedIn {
         this.gameAccess = gameAccess;
     }
 
-    private void isAuthorized(AuthData auth) throws DoesNotExistException {
+    private void isAuthorized(AuthData auth) throws DataAccessException {
         if (auth == null) {
-            throw new DoesNotExistException("This authToken does not exist");
+            throw new DataAccessException("This authToken does not exist");
         }
     }
     private ChessGame.TeamColor validColors(ChessGame.TeamColor team) throws DataAccessException {
@@ -30,13 +32,13 @@ public class IsLoggedIn {
         }
         return team;
     }
-    public void logout(String request) throws DoesNotExistException, DataAccessException {
+    public void logout(String request) throws Exception {
         AuthData auth = authAccess.getAuth(request);
         isAuthorized(auth);
         authAccess.deleteAuth(auth);
     }
 
-    public ListResult list(String request) throws DoesNotExistException, DataAccessException{
+    public ListResult list(String request) throws Exception{
         AuthData auth = null;
         try {
             auth = authAccess.getAuth(request);
@@ -47,7 +49,7 @@ public class IsLoggedIn {
         return new ListResult(gameAccess.listGames());
     }
 
-    public CreateResult create(String authToken, CreateRequest request) throws DoesNotExistException, DataAccessException{
+    public CreateResult create(String authToken, CreateRequest request) throws Exception{
         if (request.gameName() == null || request.gameName().isEmpty() || request.gameName().equals(" ")){
             throw new DataAccessException("This request is invalid");
         }
@@ -58,7 +60,7 @@ public class IsLoggedIn {
 
     }
 
-    public void joinGame(JoinRequest request, String authToken) throws DoesNotExistException, DataAccessException, AlreadyTakenException {
+    public void joinGame(JoinRequest request, String authToken) throws Exception {
         ChessGame.TeamColor team = validColors(request.playerColor());
         if (request.gameID() <= 0){
             throw new DataAccessException("This gameID is invalid");

@@ -20,7 +20,7 @@ public class GettingStarted {
         this.userAccess = userAccess;
     }
 
-    public RegisterResult register(UserData user) throws AlreadyTakenException, DataAccessException {
+    public RegisterResult register(UserData user) throws Exception {
         if (user.username() == null || user.password() == null || user.email() == null){
             throw new DataAccessException("This is an invalid request");
         }
@@ -32,7 +32,7 @@ public class GettingStarted {
         }
         throw new AlreadyTakenException("This username is already taken");
     }
-    public RegisterResult login(LoginRequest request) throws DoesNotExistException, DoesNotMatchException, DataAccessException{
+    public RegisterResult login(LoginRequest request) throws Exception{
         if(request.password() == null || request.username() == null){
             throw new DataAccessException("This request is invalid");
         }

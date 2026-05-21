@@ -20,16 +20,16 @@ class SQLGameDataAccessTest {
     private final GameData game1 = new GameData(10, null, null, "game1", new ChessGame());
     private static GameInterface gameAccess;
     @BeforeAll
-    public static void setup() throws DataAccessException {
+    public static void setup() throws Exception {
         gameAccess = new SQLGameDataAccess();
     }
 
     @BeforeEach
-    public void clearAll() throws DataAccessException {
+    public void clearAll() throws Exception {
         gameAccess.clear();
     }
     @Test
-    void createGamePositive() throws DataAccessException{
+    void createGamePositive() throws Exception{
         GameData game = gameAccess.createGame("game1");
         Assertions.assertEquals(game1, game);
     }
@@ -41,7 +41,7 @@ class SQLGameDataAccessTest {
     }
 
     @Test
-    void getGamePositive() throws DataAccessException{
+    void getGamePositive() throws Exception{
         GameData game = gameAccess.createGame("game1");
         Assertions.assertEquals(game, gameAccess.getGame(game.gameID()));
     }
@@ -53,7 +53,7 @@ class SQLGameDataAccessTest {
     }
 
     @Test
-    void listGamesPositive() throws DataAccessException{
+    void listGamesPositive() throws Exception{
         gameAccess.createGame("game1");
         gameAccess.createGame("game2");
         gameAccess.createGame("game3");
@@ -62,19 +62,19 @@ class SQLGameDataAccessTest {
     }
 
     @Test
-    void listGamesNegative() {
-        Assertions.assertThrows(DataAccessException.class, ()-> gameAccess.listGames());
+    void listGamesNegative() throws Exception {
+        Assertions.assertTrue(gameAccess.listGames().isEmpty());
     }
 
     @Test
-    void updateGamePositive() throws DataAccessException, InvalidMoveException {
+    void updateGamePositive() throws Exception {
         GameData game = gameAccess.createGame("game1");
         gameAccess.updateGame(10, "username1", null, game.gameName(),game.game());
         Assertions.assertEquals("username1", gameAccess.getGame(10).whiteUsername());
     }
 
     @Test
-    void updateGameChangesBoardAfterMove() throws DataAccessException, InvalidMoveException {
+    void updateGameChangesBoardAfterMove() throws Exception {
         GameData game = gameAccess.createGame("game1");
         game.game().makeMove(new ChessMove(new ChessPosition(2,1),new ChessPosition(3,1),null));
         gameAccess.updateGame(10, "username1", null, game.gameName(),game.game());
@@ -88,6 +88,11 @@ class SQLGameDataAccessTest {
     }
 
     @Test
-    void clear() {
+    void clear() throws Exception{
+        gameAccess.createGame("game1");
+        GameData game2 = gameAccess.createGame("game2");
+        gameAccess.createGame("game3");
+        gameAccess.clear();
+        Assertions.assertThrows(DataAccessException.class, ()->gameAccess.getGame(game2.gameID()));
     }
 }

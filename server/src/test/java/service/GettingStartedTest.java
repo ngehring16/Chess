@@ -20,7 +20,7 @@ class GettingStartedTest {
     private final GettingStarted starter = new GettingStarted(authAccess, userAccess);
     private final UserData user = new UserData("ngehring", "password", "hello@gmail.com");
     @Test
-    void registerWithValidRequestPositive() throws AlreadyTakenException, DataAccessException {
+    void registerWithValidRequestPositive() throws Exception {
         RegisterResult result = starter.register(user);
         Assertions.assertEquals(result.username(), user.username());
    }
@@ -31,7 +31,7 @@ class GettingStartedTest {
    }
 
     @Test
-    void loginWithAccurateAuthTokenPositive() throws DoesNotExistException, DoesNotMatchException, DataAccessException, AlreadyTakenException {
+    void loginWithAccurateAuthTokenPositive() throws Exception {
         starter.register(user);
         LoginRequest request = new LoginRequest("ngehring", "password");
         RegisterResult result = starter.login(request);
@@ -39,7 +39,7 @@ class GettingStartedTest {
     }
 
     @Test
-    void loginWithTheWrongPasswordNegative() throws DataAccessException, AlreadyTakenException {
+    void loginWithTheWrongPasswordNegative() throws Exception {
         starter.register(user);
         LoginRequest request = new LoginRequest("ngehring", "incorrectPassword");
         Assertions.assertThrows(DoesNotMatchException.class, ()->{starter.login(request);});

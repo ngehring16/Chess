@@ -9,11 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SQLUserDataAccess implements UserInterface{
-    public SQLUserDataAccess() throws DataAccessException{
+    public SQLUserDataAccess() throws DataAccessException, IllegalAccessException{
         configureDatabase();
     }
 
-    public void createUser(UserData user) throws DataAccessException {
+    public void createUser(UserData user) throws DataAccessException, IllegalAccessException {
         String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         var statement = "INSERT INTO userStorage (username, password, email) VALUES (?,?,?)";
         try (Connection conn = DatabaseManager.getConnection()) {
@@ -27,9 +27,12 @@ public class SQLUserDataAccess implements UserInterface{
         catch (SQLException ex) {
             throw new DataAccessException(String.format("Failed to add to userStorage: %s", ex.getMessage()));
         }
+        catch (DataAccessException dae) {
+            throw new IllegalAccessException("Failed to connect to the DataBase");
+        }
     }
 
-    public UserData getUser(String username) throws DataAccessException{
+    public UserData getUser(String username) throws DataAccessException, IllegalAccessException{
         try (Connection conn = DatabaseManager.getConnection()) {
             var statement = "SELECT username, password, email FROM userStorage WHERE username=?";
             try (var preparedStatement = conn.prepareStatement(statement)) {
@@ -39,15 +42,18 @@ public class SQLUserDataAccess implements UserInterface{
                         return new UserData(rs.getString("username"),
                                 rs.getString("password"), rs.getString("email"));
                     }
-                    throw new DataAccessException("This username is invalid");
+                    return null;
                 }
             }
         }
         catch (SQLException ex) {
             throw new DataAccessException(String.format("Failed to retrieve from userStorage: %s", ex.getMessage()));
         }
+        catch (DataAccessException dae) {
+            throw new IllegalAccessException("Failed to connect to the DataBase");
+        }
     }
-    public void clear() throws DataAccessException{
+    public void clear() throws DataAccessException, IllegalAccessException {
         var statement = "TRUNCATE TABLE userStorage";
         try (Connection conn = DatabaseManager.getConnection()) {
             try (var preparedStatement = conn.prepareStatement(statement)) {
@@ -57,9 +63,12 @@ public class SQLUserDataAccess implements UserInterface{
         catch (SQLException ex) {
             throw new DataAccessException(String.format("Failed to Delete Database: %s", ex.getMessage()));
         }
+        catch (DataAccessException dae) {
+            throw new IllegalAccessException("Failed to connect to the DataBase");
+        }
     }
 
-    private void configureDatabase() throws DataAccessException {
+    private void configureDatabase() throws DataAccessException, IllegalAccessException {
         String createStatement =  """
             CREATE TABLE IF NOT EXISTS userStorage (
             `username` varchar(256) NOT NULL,
@@ -76,6 +85,9 @@ public class SQLUserDataAccess implements UserInterface{
 
         } catch (SQLException ex) {
             throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+        }
+        catch (DataAccessException dae) {
+            throw new IllegalAccessException("Failed to connect to the DataBase");
         }
     }
 }

@@ -25,7 +25,7 @@ class ClearAllTest {
     private RegisterResult user2 = null;
 
     @BeforeEach
-    public void fillItUp() throws DataAccessException, DoesNotExistException, DoesNotMatchException, AlreadyTakenException {
+    public void fillItUp() throws Exception{
        user1 = starter.register(userFirst);
        user2 = starter.register(userNext);
        logged.create(user1.authToken(), new CreateRequest("game1"));
@@ -36,7 +36,7 @@ class ClearAllTest {
     }
 
     @Test
-    void clearPositive() throws DataAccessException{
+    void clearPositive() throws Exception{
         clearer.clear();
         try {
             Assertions.assertNull(authAccess.getAuth(user1.authToken()));
@@ -48,7 +48,7 @@ class ClearAllTest {
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
-        Assertions.assertThrows(DoesNotExistException.class,
+        Assertions.assertThrows(DataAccessException.class,
                 ()->{logged.list(user1.authToken());});
     }
 }

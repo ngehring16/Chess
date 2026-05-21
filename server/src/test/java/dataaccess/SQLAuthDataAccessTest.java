@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.DataAccessException;
+import server.DoesNotExistException;
 
 class SQLAuthDataAccessTest {
     private final  UserData user = new UserData("username1", "password1", "email1");
@@ -15,17 +16,17 @@ class SQLAuthDataAccessTest {
     private static AuthInterface authAccess;
 
     @BeforeAll
-    public static void setup() throws DataAccessException{
+    public static void setup() throws Exception{
         authAccess = new SQLAuthDataAccess();
     }
 
     @BeforeEach
-    public void clearAll() throws DataAccessException{
+    public void clearAll() throws Exception{
        authAccess.clear();
     }
 
     @Test
-    void createAuthPositive() throws DataAccessException {
+    void createAuthPositive() throws Exception {
         String authToken = authAccess.createAuth(user);
         Assertions.assertEquals(authToken, authAccess.getAuth(authToken).authToken());
     }
@@ -38,22 +39,22 @@ class SQLAuthDataAccessTest {
     }
 
     @Test
-    void deleteAuthPositive() throws DataAccessException{
+    void deleteAuthPositive() throws Exception{
         String authToken2 = authAccess.createAuth(user2);
         AuthData authStored2 = authAccess.getAuth(authToken2);
         authAccess.deleteAuth(authStored2);
-        Assertions.assertThrows(DataAccessException.class, ()-> authAccess.getAuth(authToken2));
+        Assertions.assertThrows(DoesNotExistException.class, ()-> authAccess.getAuth(authToken2));
     }
 
     @Test
-    void deleteAuthNegative() throws DataAccessException{
+    void deleteAuthNegative() throws Exception{
         String authToken2 = authAccess.createAuth(user2);
         authAccess.deleteAuth(new AuthData("LOLOLOLOLOLOLOL", "67lol"));
         Assertions.assertEquals(authToken2, authAccess.getAuth(authToken2).authToken());
     }
 
     @Test
-    void getAuthPositive() throws DataAccessException{
+    void getAuthPositive() throws Exception{
         String authToken = authAccess.createAuth(user);
         String authToken2 = authAccess.createAuth(user2);
         AuthData authStored1 = authAccess.getAuth(authToken);
@@ -65,15 +66,15 @@ class SQLAuthDataAccessTest {
 
     @Test
     void getAuthNegative(){
-        Assertions.assertThrows(DataAccessException.class,
+        Assertions.assertThrows(DoesNotExistException.class,
                 ()->authAccess.getAuth("falseTokenLOL"));
     }
 
     @Test
-    void clear() throws DataAccessException {
+    void clear() throws Exception {
         String authToken = authAccess.createAuth(user);
         String authToken2 = authAccess.createAuth(user2);
         authAccess.clear();
-        Assertions.assertThrows(DataAccessException.class, ()->authAccess.getAuth(authToken));
+        Assertions.assertThrows(DoesNotExistException.class, ()->authAccess.getAuth(authToken));
     }
 }
