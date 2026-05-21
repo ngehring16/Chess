@@ -63,10 +63,50 @@ public class SQLGameDataAccess implements GameInterface{
     }
 
     public ArrayList<GameData> listGames() throws DataAccessException {
-        return null;
+        ArrayList<GameData> games = new ArrayList<>();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT * FROM gameStorage";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    while (rs.next() && !rs.getString("gamename").isEmpty()) {
+                        var json = rs.getString("game");
+                        ChessGame game = new Gson().fromJson(json, ChessGame.class);
+                        games.add(new GameData(rs.getInt("gameId"), rs.getString("whiteUsername"),
+                                rs.getString("blackUsername"), rs.getString("gameName"), game));
+
+                    }
+                    if (games.isEmpty()){
+                        throw new DataAccessException("This gameID is invalid");
+                    }
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to retrieve authData: %s", ex.getMessage()));
+        }
+        return games;
     }
 
     public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) throws DataAccessException {
+        var statement = "UPDATE gameStorage SET gameID=?, whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID =?";
+        try (Connection conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                if (gameID < 10){
+                    throw new DataAccessException("This gameID is invalid");
+                }
+                String newGame = new Gson().toJson(game);
+                preparedStatement.setInt(6, gameID);
+                preparedStatement.setInt(1, gameID);
+                preparedStatement.setString(2, whiteUsername);
+                preparedStatement.setString(3, blackUsername);
+                preparedStatement.setString(4, gameName);
+                preparedStatement.setString(5, newGame);
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to update gameStorage: %s", ex.getMessage()));
+        }
 
     }
 
