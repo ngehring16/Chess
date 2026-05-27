@@ -1,8 +1,10 @@
 package client;
 
+import exception.ResponseException;
 import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
 import org.junit.jupiter.api.*;
+import server.AlreadyTakenException;
 import server.Server;
 
 
@@ -25,12 +27,25 @@ public class ServerFacadeTests {
         server.stop();
     }
 
+    @BeforeEach
+    public void clear(){
+        sFacade.clear();
+    }
+
 
     @Test
-    public void register() {
+    public void registerPositive() {
         UserData user = new UserData("username", "password", "email");
         RegisterResult result = sFacade.register(user);
         Assertions.assertEquals(user.username(), result.username());
+    }
+
+    @Test
+    public void registerNegative(){
+        UserData user = new UserData("username", "password", "email");
+        sFacade.register(user);
+        Assertions.assertThrows(ResponseException.class, ()-> sFacade.register(user));
+
     }
 
 }
