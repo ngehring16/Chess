@@ -1,6 +1,7 @@
 package client;
 
 import exception.ResponseException;
+import model.chessrecords.LoginRequest;
 import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
 import org.junit.jupiter.api.*;
@@ -12,6 +13,8 @@ public class ServerFacadeTests {
 
     private static Server server;
     static ServerFacade sFacade;
+    private final UserData user = new UserData("username", "password", "email");
+    private final LoginRequest login = new LoginRequest("username", "password");
 
     @BeforeAll
     public static void init() {
@@ -35,17 +38,28 @@ public class ServerFacadeTests {
 
     @Test
     public void registerPositive() {
-        UserData user = new UserData("username", "password", "email");
         RegisterResult result = sFacade.register(user);
         Assertions.assertEquals(user.username(), result.username());
     }
 
     @Test
     public void registerNegative(){
-        UserData user = new UserData("username", "password", "email");
         sFacade.register(user);
         Assertions.assertThrows(ResponseException.class, ()-> sFacade.register(user));
 
+    }
+
+    @Test
+    public void loginPositive() {
+        RegisterResult register = sFacade.register(user);
+        RegisterResult result = sFacade.login(login);
+        Assertions.assertEquals(register.username(), result.username());
+
+    }
+
+    @Test
+    public void loginNegative() {
+        Assertions.assertThrows(ResponseException.class, ()-> sFacade.login(login));
     }
 
 }
