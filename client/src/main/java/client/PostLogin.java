@@ -18,20 +18,16 @@ public class PostLogin {
         authToken = authData.authToken();
     }
 
-    private String getSingleInput(String format){
-        System.out.print(format);
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
-        var words = line.toLowerCase().split(" ");
-        return words[0];
-    }
-
     public void run(){
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("quit")){
             System.out.print(help());
             String line = scanner.nextLine();
+            if (line.isBlank()){
+                System.out.println("Please enter a valid input.");
+                continue;
+            }
 
             try {
                 result = eval(line);
@@ -84,8 +80,11 @@ public class PostLogin {
     }
 
     public String createGame(){
+        String gameName = null;
         System.out.println("What would you like to call your game?");
-        String gameName = getSingleInput("Name: ");
+        while(gameName == null) {
+            gameName = getSingleInput("Name: ");
+        }
         CreateRequest request = new CreateRequest(gameName);
         server.create(request, authToken);
         System.out.println("\nCONGRATS! " + gameName + " was created!");
@@ -112,15 +111,69 @@ public class PostLogin {
         ListResult result = server.list(authToken);
         ArrayList<GameData> games = result.games();
         ChessGame.TeamColor teamColor = null;
+        GameData gameData = null;
         String color = "";
         int i = 0;
         if (games.isEmpty()){
             System.out.println("It appears there are no games to play! Please create a game in order to play.");
             return "";
         }
+        if (!hasOpenGames(games)){
+            System.out.println("There are no open games to play at this time. Please create a new game in order to play.");
+            return "";
+        }
         System.out.println("Which game would you like to play?");
+        gameData = getGameNumber(i, gameData, games);
+        while (gameData.blackUsername() != null && gameData.whiteUsername() != null){
+            System.out.println("This game is full. Please choose a different game.");
+            gameData = getGameNumber(0, gameData, games);
+        }
+        System.out.println("Which color would you like to play as?");
+        getTeamColor(teamColor, color, gameData);
+        Gameplay gameplay = new Gameplay(server);
+        gameplay.run();
+        return "";
+    }
+
+    public String observeGame(){
+        ListResult result = server.list(authToken);
+        ArrayList<GameData> games = result.games();
+        GameData gameData = null;
+        int i = 0;
+        System.out.println("Which game would you like to watch?");
+        gameData = getGameNumber(i, gameData, games);
+        Gameplay gameplay = new Gameplay(server);
+        gameplay.run();
+        return "";
+    }
+
+    private String getSingleInput(String format){
+        System.out.print(format);
+        Scanner scanner = new Scanner(System.in);
+        String line = scanner.nextLine();
+        if (line.isBlank()){
+            System.out.println("Please give a valid input.");
+            return null;
+        }
+        var words = line.toLowerCase().split(" ");
+        return words[0];
+    }
+
+    private boolean hasOpenGames(ArrayList<GameData> games){
+        for (GameData game : games) {
+            if (game.whiteUsername() == null || game.blackUsername() == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private GameData getGameNumber(int i, GameData gameData, ArrayList<GameData> games){
         while (i < 1 || i > games.size()) {
             String game = getSingleInput("Game number: ");
+            if (game == null){
+                continue;
+            }
             try{
                 i = Integer.parseInt(game);
             } catch (NumberFormatException e) {
@@ -129,18 +182,28 @@ public class PostLogin {
             }
             if (i < 1 || i > games.size()){
                 System.out.println("There is no game with that number! Please enter a valid game number.");
+                continue;
             }
+            gameData = games.get(i-1);
         }
-        GameData gameData = games.get(i-1);
-        System.out.println("Which color would you like to play as?");
+        return gameData;
+    }
+
+    private void getTeamColor(ChessGame.TeamColor teamColor, String color, GameData gameData){
         while (teamColor == null) {
             color = getSingleInput("BLACK or WHITE?: ");
+            if (color == null){
+                continue;
+            }
             String[] words = color.toLowerCase().split(" ");
             String command = words[0];
             switch (command) {
                 case "white" -> teamColor = ChessGame.TeamColor.WHITE;
                 case "black" -> teamColor = ChessGame.TeamColor.BLACK;
-                default -> System.out.println("Please input a valid color.");
+                default -> {
+                    System.out.println("Please input a valid color.");
+                    continue;
+                }
             }
             try{
                 server.join(new JoinRequest(teamColor, gameData.gameID()), authToken);
@@ -150,12 +213,5 @@ public class PostLogin {
                 teamColor = null;
             }
         }
-        Gameplay gameplay = new Gameplay(server);
-        gameplay.run();
-        return "";
-    }
-
-    public String observeGame(){
-        return "";
     }
 }

@@ -18,6 +18,10 @@ public class PreLogin {
         System.out.print(format);
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
+        if (line.isBlank()){
+            System.out.println("Please give a valid input.");
+            return null;
+        }
         var words = line.toLowerCase().split(" ");
         return words[0];
     }
@@ -30,7 +34,10 @@ public class PreLogin {
         while (!result.equals("quit")){
             System.out.print(help());
             String line = scanner.nextLine();
-
+            if (line.isBlank()){
+                System.out.println("Please enter a valid input.");
+                continue;
+            }
             try {
                 result = eval(line);
 
@@ -48,7 +55,7 @@ public class PreLogin {
             String[] params = Arrays.copyOfRange(words, 1, words.length);
             return switch (command) {
                 case "register" -> register();
-                case "login" -> login(params);
+                case "login" -> login();
                 case "quit" -> "quit";
                 default -> help();
             };
@@ -71,9 +78,15 @@ public class PreLogin {
                 """;
     }
 
-    public String login(String[] params){
-        String username = getSingleInput("Input username: ");
-        String password = getSingleInput("Input password: ");
+    public String login(){
+        String username = null;
+        String password = null;
+        while (username == null) {
+            username = getSingleInput("Input username: ");
+        }
+        while(password == null){
+            password = getSingleInput("Input password: ");
+        }
         LoginRequest loginRequest = new LoginRequest(username, password);
         RegisterResult result = server.login(loginRequest);
         System.out.println("Successfully Logged in as " + result.username());
@@ -83,10 +96,19 @@ public class PreLogin {
     }
 
     public String register(){
+        String username = null;
+        String password = null;
+        String email = null;
         System.out.println("Enter your information below:");
-        String username = getSingleInput("Input username: ");
-        String password = getSingleInput("Input password: ");
-        String email = getSingleInput("Input email:");
+        while (username == null) {
+            username = getSingleInput("Input username: ");
+        }
+        while(password == null){
+            password = getSingleInput("Input password: ");
+        }
+        while(email == null){
+            email = getSingleInput("Input email:");
+        }
         UserData user = new UserData(username, password, email);
         RegisterResult result = server.register(user);
         System.out.println("Successfully Logged in as " + result.username());
