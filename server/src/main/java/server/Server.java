@@ -50,11 +50,11 @@ public class Server {
         cxt.result(new Gson().toJson(result));
     }
     catch (AlreadyTakenException E){
-        cxt.result(new Gson().toJson( new ErrorMessage("Error: already taken")));
+        cxt.result(new Gson().toJson( new ErrorMessage("Error: " + E.getMessage())));
         cxt.status(403);
     }
     catch (DataAccessException E){
-        cxt.result(new Gson().toJson( new ErrorMessage("Error: bad request")));
+        cxt.result(new Gson().toJson( new ErrorMessage("Error: " + E.getMessage())));
         cxt.status(400);
     }
     catch(Exception H){
@@ -70,11 +70,11 @@ public class Server {
             cxt.result(new Gson().toJson(result));
         }
         catch (DoesNotExistException | DoesNotMatchException F){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: unauthorized")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + F.getMessage())));
             cxt.status(401);
         }
         catch (DataAccessException G){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: bad request")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + G.getMessage())));
             cxt.status(400);
         }
         catch(Exception H){
@@ -91,11 +91,11 @@ public class Server {
             cxt.status(200);
         }
         catch(DoesNotExistException E){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: unauthorized")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + E.getMessage())));
             cxt.status(401);
         }
         catch (DataAccessException G){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: bad request")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + G.getMessage())));
             cxt.status(401);
         }
         catch(Exception H){
@@ -111,7 +111,7 @@ public class Server {
             cxt.result(new Gson().toJson(result));
         }
         catch(DoesNotExistException E){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: unauthorized")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + E.getMessage())));
             cxt.status(401);
         }
         catch(Exception H){
@@ -128,11 +128,11 @@ public class Server {
             cxt.result(new Gson().toJson(result));
         }
         catch (DataAccessException G){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: bad request")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + G.getMessage())));
             cxt.status(400);
         }
         catch(DoesNotExistException E){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: unauthorized")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + E.getMessage())));
             cxt.status(401);
         }
         catch(Exception H){
@@ -151,15 +151,15 @@ public class Server {
             cxt.status(200);
         }
         catch (AlreadyTakenException E){
-            cxt.result(new Gson().toJson( new ErrorMessage("Error: already taken")));
+            cxt.result(new Gson().toJson( new ErrorMessage("Error: " + E.getMessage())));
             cxt.status(403);
         }
         catch(DoesNotExistException E){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: unauthorized")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + E.getMessage())));
             cxt.status(401);
         }
         catch (DataAccessException G){
-            cxt.result(new Gson().toJson(new ErrorMessage("Error: bad request")));
+            cxt.result(new Gson().toJson(new ErrorMessage("Error: " + G.getMessage())));
             cxt.status(400);
         }
         catch(Exception H){

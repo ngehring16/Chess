@@ -79,7 +79,7 @@ public class IsLoggedIn {
             gameAccess.updateGame(game.gameID(), game.whiteUsername(), user.username(), game.gameName(), game.game());
         }
         else{
-            throw new AlreadyTakenException("This color is already taken");
+            throw new AlreadyTakenException();
         }
     }
     }

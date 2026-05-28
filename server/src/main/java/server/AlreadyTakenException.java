@@ -1,7 +1,7 @@
 package server;
 
 public class AlreadyTakenException extends Exception {
-    public AlreadyTakenException(String message) {
-        super(message);
+    public AlreadyTakenException() {
+        super("This username is already taken! Please try another one.");
     }
 }

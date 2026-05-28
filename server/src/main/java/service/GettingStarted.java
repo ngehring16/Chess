@@ -30,7 +30,7 @@ public class GettingStarted {
             String authToken = authAccess.createAuth(user);
             return new RegisterResult(user.username(), authToken);
         }
-        throw new AlreadyTakenException("This username is already taken");
+        throw new AlreadyTakenException();
     }
     public RegisterResult login(LoginRequest request) throws Exception{
         if(request.password() == null || request.username() == null){
@@ -38,14 +38,14 @@ public class GettingStarted {
         }
         UserData user = userAccess.getUser(request.username());
         if (user == null){
-            throw new DoesNotExistException("This username does not exist");
+            throw new DoesNotExistException();
         }
         if (BCrypt.checkpw(request.password(), user.password())){
             String authToken = authAccess.createAuth(user);
             return new RegisterResult(user.username(), authToken);
         }
         else{
-            throw new DoesNotMatchException("This username and password do not match");
+            throw new DoesNotMatchException();
         }
     }
 

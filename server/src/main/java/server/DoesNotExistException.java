@@ -1,7 +1,7 @@
 package server;
 
 public class DoesNotExistException extends Exception {
-    public DoesNotExistException(String message) {
-        super(message);
+    public DoesNotExistException() {
+        super("This username does not exist! Please try again.");
     }
 }

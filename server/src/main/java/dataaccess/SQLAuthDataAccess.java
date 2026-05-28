@@ -58,7 +58,7 @@ public class SQLAuthDataAccess implements AuthInterface{
                     if (rs.next()){
                         return new AuthData(rs.getString("authToken"), rs.getString("username"));
                     }
-                    throw new DoesNotExistException("This AuthToken is invalid");
+                    throw new DoesNotExistException();
                 }
             }
         }
