@@ -94,6 +94,10 @@ public class PostLogin {
     public String listGames(){
         ListResult result = server.list(authToken);
         ArrayList<GameData> games = result.games();
+        if (games.isEmpty()){
+            System.out.println("It appears there are currently no games! Please create a new game.");
+            return "";
+        }
         int j = 0;
         for (int i = 1; i <= games.size(); i ++){
             System.out.println(i + ". " + games.get(j).gameName() +": "
@@ -106,10 +110,27 @@ public class PostLogin {
     public String playGame(){
         ListResult result = server.list(authToken);
         ArrayList<GameData> games = result.games();
+        if (games.isEmpty()){
+            System.out.println("It appears there are no games to play! Please create a game in order to play.");
+            return "";
+        }
+        int i = 0;
         System.out.println("Which game would you like to play?");
-        String game = getSingleInput("Game number: ");
-        int i = Integer.parseInt(game);
-        GameData gameData = games.get(i);
+        while (i < 1 || i > games.size()) {
+            String game = getSingleInput("Game number: ");
+            try{
+                i = Integer.parseInt(game);
+            } catch (NumberFormatException e) {
+                System.out.println("Please input a number.");
+                continue;
+            }
+            if (i < 1 || i > games.size()){
+                System.out.println("There is no game with that number! Please enter a valid game number.");
+            }
+        }
+        String color = getSingleInput("Team color: ");
+        GameData gameData = games.get(i-1);
+        System.out.println(gameData.gameName());
         return "";
     }
 
