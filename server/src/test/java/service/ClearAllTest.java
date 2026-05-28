@@ -7,10 +7,7 @@ import model.chessrecords.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.AlreadyTakenException;
-import server.DataAccessException;
-import server.DoesNotExistException;
-import server.DoesNotMatchException;
+import model.chessrecords.DataAccessException;
 
 class ClearAllTest {
     private final AuthInterface authAccess = new AuthDataAccess();

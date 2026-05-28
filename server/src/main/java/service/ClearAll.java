@@ -1,7 +1,6 @@
 package service;
 
 import dataaccess.*;
-import server.DataAccessException;
 
 public class ClearAll {
     private final UserInterface userAccess;

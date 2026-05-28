@@ -1,6 +1,6 @@
 package dataaccess;
 
-import server.DataAccessException;
+import model.chessrecords.DataAccessException;
 
 import java.sql.*;
 import java.util.Properties;

@@ -2,7 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.chessrecords.GameData;
-import server.DataAccessException;
+import model.chessrecords.DataAccessException;
 
 import java.util.ArrayList;
 

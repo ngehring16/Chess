@@ -3,18 +3,14 @@ package dataaccess;
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPosition;
-import chess.InvalidMoveException;
 import model.chessrecords.GameData;
-import model.chessrecords.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.DataAccessException;
+import model.chessrecords.DataAccessException;
 
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SQLGameDataAccessTest {
     private final GameData game1 = new GameData(10, null, null, "game1", new ChessGame());

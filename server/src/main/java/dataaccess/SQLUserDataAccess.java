@@ -2,7 +2,7 @@ package dataaccess;
 
 import model.chessrecords.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-import server.DataAccessException;
+import model.chessrecords.DataAccessException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

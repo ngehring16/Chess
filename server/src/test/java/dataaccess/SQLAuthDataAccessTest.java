@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.DataAccessException;
-import server.DoesNotExistException;
+import model.chessrecords.DataAccessException;
+import model.chessrecords.DoesNotExistException;
 
 class SQLAuthDataAccessTest {
     private final  UserData user = new UserData("username1", "password1", "email1");

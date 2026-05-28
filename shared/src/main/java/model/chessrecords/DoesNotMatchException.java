@@ -1,4 +1,4 @@
-package server;
+package model.chessrecords;
 
 public class DoesNotMatchException extends Exception {
     public DoesNotMatchException() {

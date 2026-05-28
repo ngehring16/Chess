@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import exception.ResponseException;
 import model.chessrecords.*;
 
@@ -10,7 +11,7 @@ import java.util.Scanner;
 public class PostLogin {
     private final ServerFacade server;
     private final RegisterResult authData;
-    private String authToken;
+    private final String authToken;
     public PostLogin(ServerFacade server, RegisterResult authData){
         this.server = server;
         this.authData = authData;
@@ -110,27 +111,47 @@ public class PostLogin {
     public String playGame(){
         ListResult result = server.list(authToken);
         ArrayList<GameData> games = result.games();
+        ChessGame.TeamColor teamColor = null;
+        String color = "";
+        int i = 0;
         if (games.isEmpty()){
             System.out.println("It appears there are no games to play! Please create a game in order to play.");
             return "";
         }
-        int i = 0;
         System.out.println("Which game would you like to play?");
         while (i < 1 || i > games.size()) {
             String game = getSingleInput("Game number: ");
             try{
                 i = Integer.parseInt(game);
             } catch (NumberFormatException e) {
-                System.out.println("Please input a number.");
+                System.out.println("Error: Please input a number.");
                 continue;
             }
             if (i < 1 || i > games.size()){
                 System.out.println("There is no game with that number! Please enter a valid game number.");
             }
         }
-        String color = getSingleInput("Team color: ");
         GameData gameData = games.get(i-1);
-        System.out.println(gameData.gameName());
+        System.out.println("Which color would you like to play as?");
+        while (teamColor == null) {
+            color = getSingleInput("BLACK or WHITE?: ");
+            String[] words = color.toLowerCase().split(" ");
+            String command = words[0];
+            switch (command) {
+                case "white" -> teamColor = ChessGame.TeamColor.WHITE;
+                case "black" -> teamColor = ChessGame.TeamColor.BLACK;
+                default -> System.out.println("Please input a valid color.");
+            }
+            try{
+                server.join(new JoinRequest(teamColor, gameData.gameID()), authToken);
+            }
+            catch (ResponseException rE){
+                System.out.println("This color is already taken! Please pick a different one.");
+                teamColor = null;
+            }
+        }
+        Gameplay gameplay = new Gameplay(server);
+        gameplay.run();
         return "";
     }
 

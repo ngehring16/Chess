@@ -3,11 +3,8 @@ package service;
 import chess.ChessGame;
 import dataaccess.*;
 import model.chessrecords.*;
-import server.AlreadyTakenException;
-import server.DataAccessException;
-import server.DoesNotExistException;
-
-import javax.xml.crypto.Data;
+import model.chessrecords.AlreadyTakenException;
+import model.chessrecords.DataAccessException;
 
 public class IsLoggedIn {
 

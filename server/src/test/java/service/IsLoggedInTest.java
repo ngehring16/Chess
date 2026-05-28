@@ -6,9 +6,7 @@ import model.chessrecords.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import server.AlreadyTakenException;
-import server.DataAccessException;
-import server.DoesNotExistException;
+import model.chessrecords.DataAccessException;
 
 class IsLoggedInTest {
     private final AuthInterface authAccess = new AuthDataAccess();

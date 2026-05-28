@@ -1,4 +1,4 @@
-package server;
+package model.chessrecords;
 
 public class DoesNotExistException extends Exception {
     public DoesNotExistException() {

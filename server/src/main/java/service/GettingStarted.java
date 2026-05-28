@@ -6,10 +6,10 @@ import model.chessrecords.LoginRequest;
 import model.chessrecords.RegisterResult;
 import model.chessrecords.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-import server.AlreadyTakenException;
-import server.DataAccessException;
-import server.DoesNotExistException;
-import server.DoesNotMatchException;
+import model.chessrecords.AlreadyTakenException;
+import model.chessrecords.DataAccessException;
+import model.chessrecords.DoesNotExistException;
+import model.chessrecords.DoesNotMatchException;
 
 public class GettingStarted {
     private final AuthInterface authAccess;

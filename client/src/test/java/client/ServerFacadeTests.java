@@ -4,7 +4,6 @@ import chess.ChessGame;
 import exception.ResponseException;
 import model.chessrecords.*;
 import org.junit.jupiter.api.*;
-import server.AlreadyTakenException;
 import server.Server;
 
 import java.util.ArrayList;

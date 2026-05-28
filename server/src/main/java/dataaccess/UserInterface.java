@@ -1,7 +1,7 @@
 package dataaccess;
 
 import model.chessrecords.UserData;
-import server.DataAccessException;
+import model.chessrecords.DataAccessException;
 
 public interface UserInterface {
     public void createUser(UserData user) throws DataAccessException, IllegalAccessException;

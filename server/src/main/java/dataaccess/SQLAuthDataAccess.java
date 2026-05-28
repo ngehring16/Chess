@@ -2,8 +2,8 @@ package dataaccess;
 
 import model.chessrecords.AuthData;
 import model.chessrecords.UserData;
-import server.DataAccessException;
-import server.DoesNotExistException;
+import model.chessrecords.DataAccessException;
+import model.chessrecords.DoesNotExistException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
