@@ -17,6 +17,28 @@ public class SQLGameDataAccess implements GameInterface{
 
     public SQLGameDataAccess() throws DataAccessException, IllegalAccessException{
         configureDatabase();
+        gameIDSource += get_size();
+    }
+
+    private int get_size() throws DataAccessException, IllegalAccessException{
+        int counter = 0;
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT * FROM gameStorage";
+            try (var preparedStatement = conn.prepareStatement(statement)) {
+                try (ResultSet rs = preparedStatement.executeQuery()) {
+                    while (rs.next()){
+                        counter ++;
+                    }
+                }
+            }
+        }
+        catch (SQLException ex) {
+            throw new DataAccessException(String.format("Failed to create new game: %s", ex.getMessage()));
+        }
+        catch (DataAccessException dae) {
+            throw new IllegalAccessException("Failed to connect to the DataBase");
+        }
+        return counter;
     }
 
     public GameData createGame(String gameName) throws DataAccessException, IllegalAccessException {

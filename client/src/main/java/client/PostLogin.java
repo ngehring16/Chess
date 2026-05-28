@@ -86,9 +86,8 @@ public class PostLogin {
         System.out.println("What would you like to call your game?");
         String gameName = getSingleInput("Name: ");
         CreateRequest request = new CreateRequest(gameName);
-        CreateResult result = server.create(request, authToken);
-        System.out.println("\nCONGRATS! " + gameName + " was created!\n" +
-                "You can find it with the gameID: " + result.gameID());
+        server.create(request, authToken);
+        System.out.println("\nCONGRATS! " + gameName + " was created!");
         return "";
     }
 
@@ -98,14 +97,19 @@ public class PostLogin {
         int j = 0;
         for (int i = 1; i <= games.size(); i ++){
             System.out.println(i + ". " + games.get(j).gameName() +": "
-                    + games.get(j).whiteUsername() + ", " + games.get(j).blackUsername()
-                    + ", GameID#: " + games.get(j).gameID());
+                    + games.get(j).whiteUsername() + ", " + games.get(j).blackUsername());
             j++;
         }
         return "";
     }
 
     public String playGame(){
+        ListResult result = server.list(authToken);
+        ArrayList<GameData> games = result.games();
+        System.out.println("Which game would you like to play?");
+        String game = getSingleInput("Game number: ");
+        int i = Integer.parseInt(game);
+        GameData gameData = games.get(i);
         return "";
     }
 
