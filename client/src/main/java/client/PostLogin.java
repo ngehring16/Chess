@@ -22,7 +22,7 @@ public class PostLogin {
     public void run(){
         Scanner scanner = new Scanner(System.in);
         var result = "";
-        while (!result.equals("quit")){
+        while (!result.equals("stop")){
             System.out.print(help());
             String line = scanner.nextLine();
             if (line.isBlank()){
@@ -76,7 +76,7 @@ public class PostLogin {
     public String logout(){
         server.logout(authToken);
         System.out.println("Goodbye! " + authData.username());
-        return "quit";
+        return "stop";
     }
 
     public String createGame(){
