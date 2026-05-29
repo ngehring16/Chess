@@ -16,10 +16,10 @@ public class SQLGameDataAccess implements GameInterface{
 
     public SQLGameDataAccess() throws DataAccessException, IllegalAccessException{
         configureDatabase();
-        gameIDSource += get_size();
+        gameIDSource += getSize();
     }
 
-    private int get_size() throws DataAccessException, IllegalAccessException{
+    private int getSize() throws DataAccessException, IllegalAccessException{
         int counter = 0;
         try (Connection conn = DatabaseManager.getConnection()) {
             var statement = "SELECT * FROM gameStorage";

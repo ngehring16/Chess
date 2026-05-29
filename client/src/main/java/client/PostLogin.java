@@ -12,6 +12,7 @@ public class PostLogin {
     private final ServerFacade server;
     private final RegisterResult authData;
     private final String authToken;
+    private final LoopTools loopTools = new LoopTools();
     public PostLogin(ServerFacade server, RegisterResult authData){
         this.server = server;
         this.authData = authData;
@@ -43,7 +44,6 @@ public class PostLogin {
         try {
             String[] words = input.toLowerCase().split(" ");
             String command = (words.length > 0) ? words[0] : "help";
-            String[] params = Arrays.copyOfRange(words, 1, words.length);
             return switch (command) {
                 case "logout" -> logout();
                 case "create"-> createGame();
@@ -83,7 +83,7 @@ public class PostLogin {
         String gameName = null;
         System.out.println("What would you like to call your game?");
         while(gameName == null) {
-            gameName = getSingleInput("Name: ");
+            gameName = loopTools.getSingleInput("Name: ");
         }
         CreateRequest request = new CreateRequest(gameName);
         server.create(request, authToken);
@@ -152,18 +152,6 @@ public class PostLogin {
         return "";
     }
 
-    private String getSingleInput(String format){
-        System.out.print(format);
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
-        if (line.isBlank()){
-            System.out.println("Please give a valid input.");
-            return null;
-        }
-        var words = line.toLowerCase().split(" ");
-        return words[0];
-    }
-
     private boolean hasOpenGames(ArrayList<GameData> games){
         for (GameData game : games) {
             if (game.whiteUsername() == null || game.blackUsername() == null) {
@@ -175,7 +163,7 @@ public class PostLogin {
 
     private GameData getGameNumber(int i, GameData gameData, ArrayList<GameData> games){
         while (i < 1 || i > games.size()) {
-            String game = getSingleInput("Game number: ");
+            String game = loopTools.getSingleInput("Game number: ");
             if (game == null){
                 continue;
             }
@@ -196,7 +184,7 @@ public class PostLogin {
 
     private ChessGame.TeamColor getTeamColor(ChessGame.TeamColor teamColor, String color, GameData gameData){
         while (teamColor == null) {
-            color = getSingleInput("BLACK or WHITE?: ");
+            color = loopTools.getSingleInput("BLACK or WHITE?: ");
             if (color == null){
                 continue;
             }
