@@ -8,6 +8,8 @@ import model.chessrecords.UserData;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static ui.EscapeSequences.*;
+
 public class PreLogin {
     private final ServerFacade server;
     public PreLogin(ServerFacade server){
@@ -27,7 +29,7 @@ public class PreLogin {
     }
 
     public void run(){
-        System.out.println("♔ WELCOME CHESS CHAMPION. SIGN IN TO START ♚");
+        System.out.println(SET_TEXT_BOLD + "♔ WELCOME CHESS CHAMPION. SIGN IN TO START ♚");
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
@@ -66,13 +68,14 @@ public class PreLogin {
     }
 
     public String help(){
+        System.out.print(SET_TEXT_BOLD);
         return """
                 
                 ACTIONS:
-                - register
-                - login
-                - quit
-                - help
+                - REGISTER
+                - LOGIN
+                - QUIT
+                - HELP
                 __________
                 
                 """;
