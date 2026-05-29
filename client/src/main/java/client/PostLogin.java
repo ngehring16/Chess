@@ -138,10 +138,13 @@ public class PostLogin {
     public String observeGame(){
         ListResult result = server.list(authToken);
         ArrayList<GameData> games = result.games();
+        ChessGame.TeamColor teamColor = ChessGame.TeamColor.WHITE;
         GameData gameData = null;
         int i = 0;
         System.out.println("Which game would you like to watch?");
         gameData = getGameNumber(i, gameData, games);
+        DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
+        drawBoard.run();
         Gameplay gameplay = new Gameplay(server);
         gameplay.run();
         return "";
