@@ -27,6 +27,9 @@ public class DrawBoard {
         if (teamColor == ChessGame.TeamColor.WHITE){
             drawWhite(out);
         }
+        if (teamColor == ChessGame.TeamColor.BLACK){
+            drawBlack(out);
+        }
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
     }
@@ -46,6 +49,22 @@ public class DrawBoard {
         }
         drawLetters(out, top);
 
+    }
+
+    private void drawBlack(PrintStream out){
+        ChessPiece piece = null;
+        String[] top = { "H", "G", "F" ,"E", "D", "C", "B", "A"};
+        drawLetters(out, top);
+        for (int j = 1; j < 9; j++){
+            drawNumbers(out, j);
+            for (int k = 8; k > 0; k--){
+                drawRow(out, j, k, piece);
+            }
+            drawNumbers(out, j);
+            out.print(RESET_BG_COLOR);
+            out.println();
+        }
+        drawLetters(out, top);
     }
 
     private void drawRow(PrintStream out, int j, int k, ChessPiece piece){

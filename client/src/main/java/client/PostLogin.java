@@ -129,7 +129,9 @@ public class PostLogin {
             gameData = getGameNumber(0, gameData, games);
         }
         System.out.println("Which color would you like to play as?");
-        getTeamColor(teamColor, color, gameData);
+        teamColor = getTeamColor(teamColor, color, gameData);
+        DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
+        drawBoard.run();
         Gameplay gameplay = new Gameplay(server);
         gameplay.run();
         return "";
@@ -192,7 +194,7 @@ public class PostLogin {
         return gameData;
     }
 
-    private void getTeamColor(ChessGame.TeamColor teamColor, String color, GameData gameData){
+    private ChessGame.TeamColor getTeamColor(ChessGame.TeamColor teamColor, String color, GameData gameData){
         while (teamColor == null) {
             color = getSingleInput("BLACK or WHITE?: ");
             if (color == null){
@@ -216,5 +218,6 @@ public class PostLogin {
                 teamColor = null;
             }
         }
+        return teamColor;
     }
 }
