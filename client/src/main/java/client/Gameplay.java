@@ -5,7 +5,7 @@ import exception.ResponseException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Gameplay {
+public class Gameplay extends LoopTools{
     private final ServerFacade server;
     public Gameplay(ServerFacade server){
         this.server = server;
@@ -14,18 +14,7 @@ public class Gameplay {
     public void run(){
         Scanner scanner = new Scanner(System.in);
         var result = "";
-        while (!result.equals("quit")){
-            System.out.print(help());
-            String line = scanner.nextLine();
-
-            try {
-                result = eval(line);
-
-            }
-            catch(Throwable ex){
-                System.out.println(ex.getMessage());
-            }
-        }
+        runLoop(result, help(), scanner);
     }
 
     public String eval(String input){

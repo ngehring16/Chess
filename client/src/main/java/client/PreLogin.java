@@ -10,33 +10,17 @@ import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
-public class PreLogin {
+public class PreLogin extends LoopTools{
     private final ServerFacade server;
-    private final LoopTools loopTools = new LoopTools();
     public PreLogin(ServerFacade server){
         this.server = server;
     }
 
     public void run(){
         System.out.println(SET_TEXT_BOLD + "♔ WELCOME CHESS CHAMPION. SIGN IN TO START ♚");
-
         Scanner scanner = new Scanner(System.in);
         var result = "";
-        while (!result.equals("quit")){
-            System.out.print(help());
-            String line = scanner.nextLine();
-            if (line.isBlank()){
-                System.out.println("Please enter a valid input.");
-                continue;
-            }
-            try {
-                result = eval(line);
-
-            }
-            catch(Throwable ex){
-                System.out.println(ex.getMessage());
-            }
-        }
+        runLoop(result, help(), scanner);
     }
 
     public String eval(String input){
@@ -73,10 +57,10 @@ public class PreLogin {
         String username = null;
         String password = null;
         while (username == null) {
-            username = loopTools.getSingleInput("Input username: ");
+            username = getSingleInput("Input username: ");
         }
         while(password == null){
-            password = loopTools.getSingleInput("Input password: ");
+            password = getSingleInput("Input password: ");
         }
         LoginRequest loginRequest = new LoginRequest(username, password);
         RegisterResult result = server.login(loginRequest);
@@ -92,13 +76,13 @@ public class PreLogin {
         String email = null;
         System.out.println("Enter your information below:");
         while (username == null) {
-            username = loopTools.getSingleInput("Input username: ");
+            username = getSingleInput("Input username: ");
         }
         while(password == null){
-            password = loopTools.getSingleInput("Input password: ");
+            password = getSingleInput("Input password: ");
         }
         while(email == null){
-            email = loopTools.getSingleInput("Input email:");
+            email = getSingleInput("Input email:");
         }
         UserData user = new UserData(username, password, email);
         RegisterResult result = server.register(user);
