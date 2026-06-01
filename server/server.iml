@@ -8,7 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="library" name="mysql.connector.j" level="project" />
+    <orderEntry type="library" name="org.glassfish.tyrus.bundles:tyrus-standalone-client:2.1.4" level="project" />
     <orderEntry type="library" name="mindrot.jbcrypt" level="project" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shared" />
