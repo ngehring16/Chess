@@ -44,7 +44,7 @@ public class PostLogin extends LoopTools{
     public String help(){
         return """
                 
-                ACTIONS:             
+                ACTIONS:
                 - help
                 - logout
                 - create game
@@ -113,9 +113,7 @@ public class PostLogin extends LoopTools{
         }
         System.out.println("Which color would you like to play as?");
         teamColor = getTeamColor(teamColor, color, gameData);
-        DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
-        drawBoard.run();
-        Gameplay gameplay = new Gameplay(server);
+        Gameplay gameplay = new Gameplay(gameData, teamColor);
         gameplay.run();
         return "";
     }
@@ -130,7 +128,7 @@ public class PostLogin extends LoopTools{
         gameData = getGameNumber(i, gameData, games);
         DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
         drawBoard.run();
-        Gameplay gameplay = new Gameplay(server);
+        Gameplay gameplay = new Gameplay(gameData, teamColor);
         gameplay.run();
         return "";
     }

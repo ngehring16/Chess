@@ -1,14 +1,16 @@
 package client;
 
+import chess.ChessGame;
 import exception.ResponseException;
-
-import java.util.Arrays;
+import model.chessrecords.GameData;
 import java.util.Scanner;
 
 public class Gameplay extends LoopTools{
-    private final ServerFacade server;
-    public Gameplay(ServerFacade server){
-        this.server = server;
+    private final GameData gameData;
+    private final ChessGame.TeamColor teamColor;
+    public Gameplay(GameData gameData, ChessGame.TeamColor teamColor){
+        this.gameData = gameData;
+        this.teamColor = teamColor;
     }
 
     public void run(){
@@ -22,8 +24,11 @@ public class Gameplay extends LoopTools{
             String[] words = input.toLowerCase().split(" ");
             String command = (words.length > 0) ? words[0] : "help";
             return switch (command) {
-                case "quit" -> "quit";
-                case "display"-> display();
+                case "redraw" -> redrawBoard();
+                case "leave" -> "quit";
+                case "make" -> makeMove();
+                case "resign" -> resign();
+                case "highlight" -> highlightLegalMoves();
                 default -> help();
             };
         }
@@ -37,12 +42,24 @@ public class Gameplay extends LoopTools{
         return """
                 
                 GAMEPLAY:
-                -quit Game
-                -display
+                -HELP
+                -REDRAW CHESSBOARD
+                -LEAVE
+                -MAKE MOVE
+                -RESIGN
+                -HIGHLIGHT LEGAL MOVES
                 """;
     }
 
-    public String display(){
-        return "here's the board!";
+    public String redrawBoard(){
+        DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
+        drawBoard.run();
+        return "";
     }
+
+    public String makeMove(){return "";}
+
+    public String resign(){return "";}
+
+    public String highlightLegalMoves(){return "";}
 }
