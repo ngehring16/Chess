@@ -1,6 +1,8 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import exception.ResponseException;
 import model.chessrecords.GameData;
 import java.util.Scanner;
@@ -53,7 +55,7 @@ public class Gameplay extends LoopTools{
 
     public String redrawBoard(){
         DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
-        drawBoard.run();
+        drawBoard.run(new ChessMove(new ChessPosition(2,2), new ChessPosition(3, 2), null));
         return "";
     }
 

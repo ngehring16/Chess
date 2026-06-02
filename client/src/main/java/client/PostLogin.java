@@ -1,6 +1,8 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import exception.ResponseException;
 import model.chessrecords.*;
 
@@ -127,7 +129,7 @@ public class PostLogin extends LoopTools{
         System.out.println("Which game would you like to watch?");
         gameData = getGameNumber(i, gameData, games);
         DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
-        drawBoard.run();
+        drawBoard.run(new ChessMove(new ChessPosition(0,0), new ChessPosition(0,0), null));
         Gameplay gameplay = new Gameplay(gameData, teamColor);
         gameplay.run();
         return "";

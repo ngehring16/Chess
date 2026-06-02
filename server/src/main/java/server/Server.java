@@ -1,6 +1,7 @@
 package server;
 
 import dataaccess.*;
+import io.javalin.websocket.WsConfig;
 import model.chessrecords.*;
 import com.google.gson.Gson;
 import io.javalin.*;
@@ -41,6 +42,13 @@ public class Server {
         javalin.get("/game", this::list);
         javalin.post("/game", this::create);
         javalin.put("/game", this::join);
+        javalin.ws("/ws", this::webSocketSetup);
+    }
+
+    private void webSocketSetup(WsConfig ws) {
+        ws.onConnect();
+        ws.onMessage();
+        ws.onClose();
     }
 
     public void register(Context cxt){
