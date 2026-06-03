@@ -5,7 +5,7 @@ import chess.ChessMove;
 import java.util.Objects;
 
 public class MakeMoveCommand extends UserGameCommand{
-    private final ChessMove move;
+    private static ChessMove move;
 
     public MakeMoveCommand(CommandType commandType, String authToken, Integer gameID, ChessMove move) {
         super(commandType, authToken, gameID);

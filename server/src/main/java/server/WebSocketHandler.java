@@ -43,9 +43,15 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
 
     }
 
-    private void makeMove(int gameID, String authToken, ChessMove move, Session session){}
+    private void makeMove(int gameID, String authToken, ChessMove move, Session session){
 
-    private void leave(int gameID, String authToken, Session session){}
+    }
 
-    private void resign(int gameID, String authToken, Session session){}
+    private void leave(int gameID, String authToken, Session session){
+
+    }
+
+    private void resign(int gameID, String authToken, Session session){
+
+    }
 }

@@ -14,9 +14,8 @@ public class Server {
     private final GettingStarted starter;
     private final IsLoggedIn loggedIn;
     private final ClearAll clearer;
-
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
     public Server() {
-        WebSocketHandler webSocketHandler = new WebSocketHandler();
         AuthInterface authAccess;
         UserInterface userAccess;
         GameInterface gameAccess;
@@ -47,9 +46,9 @@ public class Server {
     }
 
     private void webSocketSetup(WsConfig ws) {
+        ws.onClose(webSocketHandler);
+        ws.onMessage(webSocketHandler);
         ws.onConnect(webSocketHandler);
-        ws.onMessage();
-        ws.onClose();
     }
 
     public void register(Context cxt){
