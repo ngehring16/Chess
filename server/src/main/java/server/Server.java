@@ -16,6 +16,7 @@ public class Server {
     private final ClearAll clearer;
 
     public Server() {
+        WebSocketHandler webSocketHandler = new WebSocketHandler();
         AuthInterface authAccess;
         UserInterface userAccess;
         GameInterface gameAccess;
@@ -46,7 +47,7 @@ public class Server {
     }
 
     private void webSocketSetup(WsConfig ws) {
-        ws.onConnect();
+        ws.onConnect(webSocketHandler);
         ws.onMessage();
         ws.onClose();
     }
