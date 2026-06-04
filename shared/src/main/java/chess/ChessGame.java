@@ -19,7 +19,7 @@ public class ChessGame {
         board.resetBoard();
     }
 
-    public boolean hasValidMoves(TeamColor teamColor){
+    private boolean hasValidMoves(TeamColor teamColor){
         Collection<ChessMove> validMoves = new ArrayList<>();
         for (int i = 1; i < 9; i++){
             for (int j =1; j<9; j++){
@@ -33,7 +33,7 @@ public class ChessGame {
         return validMoves.isEmpty();
     }
 
-    public void movePiece(ChessPosition start, ChessPosition end, ChessBoard board, ChessPiece.PieceType promotion){
+    private void movePiece(ChessPosition start, ChessPosition end, ChessBoard board, ChessPiece.PieceType promotion){
 
         ChessPiece piece = board.getPiece(start);
         if(promotion != null){
@@ -43,7 +43,7 @@ public class ChessGame {
         board.addPiece(start, null);
     }
 
-    public boolean checkChecker(TeamColor teamColor, ChessBoard board){
+    private boolean checkChecker(TeamColor teamColor, ChessBoard board){
         ChessPiece king = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
         Collection<ChessMove> attacks = new ArrayList<>();
         for(int i = 1; i < 9; i++){

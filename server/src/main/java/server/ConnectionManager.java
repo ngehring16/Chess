@@ -1,5 +1,7 @@
 package server;
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.ServerMessage;
 
 import javax.management.Notification;
 import java.io.IOException;
@@ -25,8 +27,14 @@ public class ConnectionManager {
         connections.get(gameID).remove(session);
     }
 
-    public void broadcast(Session excludeSession, Notification notification) throws IOException {
-        String message = notification.toString();
+    public void broadcast(Session excludeSession, ServerMessage notification) throws IOException {
+        String message;
+        if (notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
+            message = new Gson().toJson(notification.getGame());
+        }
+        else{
+            message = new Gson().toJson(notification.getMessage());
+        }
         for (ArrayList<Session> f : connections.values()){
             for(Session g : f){
                 if (g.isOpen()){

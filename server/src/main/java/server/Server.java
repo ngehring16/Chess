@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
 import service.*;
+import websocket.messages.ServerMessage;
 
 public class Server {
 
@@ -14,7 +15,7 @@ public class Server {
     private final GettingStarted starter;
     private final IsLoggedIn loggedIn;
     private final ClearAll clearer;
-    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
+    private final WebSocketHandler webSocketHandler;
     public Server() {
         AuthInterface authAccess;
         UserInterface userAccess;
@@ -30,6 +31,7 @@ public class Server {
            gameAccess = new GameDataAccess();
 
         }
+        webSocketHandler = new WebSocketHandler(authAccess, userAccess, gameAccess);
         starter = new GettingStarted(authAccess, userAccess);
         loggedIn = new IsLoggedIn(authAccess, userAccess, gameAccess);
         clearer = new ClearAll(userAccess, authAccess, gameAccess);

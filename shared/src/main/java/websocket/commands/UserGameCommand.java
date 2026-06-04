@@ -1,5 +1,7 @@
 package websocket.commands;
 
+import chess.ChessMove;
+
 import java.util.Objects;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Objects;
  * Note: You can add to this class, but you should not alter the existing
  * methods.
  */
-public abstract class UserGameCommand {
+public class UserGameCommand {
 
     private final CommandType commandType;
 
@@ -16,10 +18,20 @@ public abstract class UserGameCommand {
 
     private final Integer gameID;
 
+    private final ChessMove move;
+
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
         this.gameID = gameID;
+        this.move = null;
+    }
+
+    public UserGameCommand(String authToken, Integer gameID, ChessMove move){
+        this.commandType = CommandType.MAKE_MOVE;
+        this.authToken = authToken;
+        this.gameID = gameID;
+        this.move = move;
     }
 
     public enum CommandType {
@@ -39,6 +51,10 @@ public abstract class UserGameCommand {
 
     public Integer getGameID() {
         return gameID;
+    }
+
+    public ChessMove getMove(){
+        return move;
     }
 
     @Override
