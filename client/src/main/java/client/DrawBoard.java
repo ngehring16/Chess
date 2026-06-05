@@ -12,9 +12,8 @@ public class DrawBoard {
     private final ChessGame.TeamColor teamColor;
     private final ChessBoard board;
 
-    public DrawBoard(GameData gameData, ChessGame.TeamColor teamColor){
+    public DrawBoard(ChessGame game, ChessGame.TeamColor teamColor){
         this.teamColor = teamColor;
-        ChessGame game = gameData.game();
         board = game.getBoard();
     }
 

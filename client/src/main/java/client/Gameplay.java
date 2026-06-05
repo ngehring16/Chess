@@ -7,12 +7,14 @@ import chess.ChessPosition;
 import exception.ResponseException;
 import model.chessrecords.GameData;
 import websocket.messages.ServerMessage;
+import static ui.EscapeSequences.*;
 
 import java.util.Scanner;
 
 public class Gameplay extends LoopTools implements NotificationManager {
     private final GameData gameData;
     private final ChessGame.TeamColor teamColor;
+    private final ChessMove nullMove = new ChessMove(new ChessPosition(0,0), new ChessPosition(0,0), null);
     public Gameplay(GameData gameData, ChessGame.TeamColor teamColor){
         this.gameData = gameData;
         this.teamColor = teamColor;
@@ -66,7 +68,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public String redrawBoard(){
-        DrawBoard drawBoard = new DrawBoard(gameData, teamColor);
+        DrawBoard drawBoard = new DrawBoard(gameData.game(), teamColor);
         drawBoard.run(new ChessMove(new ChessPosition(2,2), new ChessPosition(3, 2), null));
         return "";
     }
@@ -77,9 +79,21 @@ public class Gameplay extends LoopTools implements NotificationManager {
 
     public String highlightLegalMoves(){return "";}
 
-    private void displayNotification(ServerMessage notification){}
+    private void displayNotification(ServerMessage notification){
+        System.out.print(SET_TEXT_COLOR_BLUE);
+        System.out.println(notification.getMessage());
+        System.out.print(RESET_TEXT_COLOR);
+    }
 
-    private void displayError(ServerMessage message){}
+    private void displayError(ServerMessage message){
+        System.out.print(SET_TEXT_ITALIC);
+        System.out.print(SET_TEXT_COLOR_RED);
+        System.out.println(message.getMessage());
+        System.out.print(RESET_TEXT_COLOR);
+    }
 
-    private void loadGame(ServerMessage game){}
+    private void loadGame(ServerMessage game){
+        DrawBoard drawBoard = new DrawBoard(game.getGame(), teamColor);
+        drawBoard.run(nullMove);
+    }
 }
