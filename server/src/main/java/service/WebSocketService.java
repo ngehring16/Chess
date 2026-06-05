@@ -46,10 +46,10 @@ public class WebSocketService {
             teamColor = null;
         }
         if (teamColor == null){
-            notify = username + "has joined the game to observe.";
+            notify = username + " has joined the game to observe.";
         }
         else{
-            notify = username + "has joined the game as " + teamColor;
+            notify = username + " has joined the game as " + teamColor;
         }
         ServerMessage loadGame = new ServerMessage(gameAccess.getGame(gameID).game());
         String jsonMessage = new Gson().toJson(loadGame);

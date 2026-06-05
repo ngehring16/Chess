@@ -15,12 +15,13 @@ public class ConnectionManager {
         ArrayList<Session> list = new ArrayList<>();
         if (connections.get(gameID) == null){
             list.add(session);
+            connections.put(gameID, list);
         }
         else {
             list = connections.get(gameID);
             list.add(session);
+            connections.replace(gameID, list);
         }
-        connections.replace(gameID, list);
     }
 
     public void remove(Session session, int gameID){
@@ -28,17 +29,11 @@ public class ConnectionManager {
     }
 
     public void broadcast(Session excludeSession, ServerMessage notification) throws IOException {
-        String message;
-        if (notification.getServerMessageType() == ServerMessage.ServerMessageType.LOAD_GAME){
-            message = new Gson().toJson(notification.getGame());
-        }
-        else{
-            message = new Gson().toJson(notification.getMessage());
-        }
+        String message = new Gson().toJson(notification);
         for (ArrayList<Session> f : connections.values()){
             for(Session g : f){
-                if (g.isOpen()){
-                    if(!g.equals(excludeSession)){
+                if (!g.equals(excludeSession)){
+                    if(g.isOpen()){
                         g.getRemote().sendString(message);
                     }
                 }
