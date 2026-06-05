@@ -1,7 +1,9 @@
 package service;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.State;
 import com.google.gson.Gson;
 import dataaccess.AuthInterface;
 import dataaccess.GameInterface;
@@ -61,6 +63,9 @@ public class WebSocketService {
         String username = getUsername(authToken);
         GameData gameData = gameAccess.getGame(gameID);
         ChessGame game = gameData.game();
+        if (game.getGameState() == State.GAMEOVER){
+            throw new DataAccessException("This game has ended. Please leave and choose a different game to play.");
+        }
         Collection<ChessMove> validMoves = game.validMoves(move.getStartPosition());
         if (!moveIsValid(validMoves, move)){
             throw new DataAccessException("This move is invalid. Please choose a valid move!");
@@ -90,6 +95,17 @@ public class WebSocketService {
         ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has left the game.");
         connections.remove(session, gameID);
         connections.broadcast(session, notify);
+    }
+
+    public void resign(int gameID, String authToken, Session session) throws Exception{
+        isValid(authToken, gameID);
+        GameData gameData = gameAccess.getGame(gameID);
+        String username = getUsername(authToken);
+        gameData.game().setGameState(State.GAMEOVER);
+        gameData.game().setBoard(new ChessBoard());
+        gameAccess.updateGame(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
+        ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned");
+        connections.broadcast(null, notify);
     }
 
 
@@ -132,11 +148,13 @@ public class WebSocketService {
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                     "CHECKMATE! " + username + " has lost.");
             connections.broadcast(null, notify);
+            game.setGameState(State.GAMEOVER);
         }
         else if(game.isInStalemate(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                     "STALEMATE! " + username + " is not in check but has no valid moves.");
             connections.broadcast(null, notify);
+            game.setGameState(State.GAMEOVER);
         }
         else if(game.isInCheck(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,

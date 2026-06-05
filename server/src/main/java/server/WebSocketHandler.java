@@ -62,11 +62,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         service.makeMove(gameID, authToken, move, session);
     }
 
-    private void leave(int gameID, String authToken, Session session){
-
+    private void leave(int gameID, String authToken, Session session) throws Exception{
+        service.leave(gameID, authToken, session);
     }
 
-    private void resign(int gameID, String authToken, Session session){
-
+    private void resign(int gameID, String authToken, Session session) throws Exception{
+        service.resign(gameID, authToken, session);
     }
 }

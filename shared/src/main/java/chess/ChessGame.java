@@ -13,10 +13,19 @@ import java.util.Objects;
 public class ChessGame {
     private ChessBoard board = new ChessBoard();
     private TeamColor team;
+    private State state = State.GAMEON;
 
     public ChessGame() {
         setTeamTurn(TeamColor.WHITE);
         board.resetBoard();
+    }
+
+    public void setGameState(State state){
+        this.state = state;
+    }
+
+    public State getGameState(){
+        return state;
     }
 
     private boolean hasValidMoves(TeamColor teamColor){
