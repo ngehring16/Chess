@@ -37,8 +37,18 @@ public class ServerMessage {
     public ServerMessage(ServerMessageType type, String message){
         this.serverMessageType = type;
         this.game = null;
-        this.message = message;
-        this.errorMessage = message;
+        if (type == ServerMessageType.NOTIFICATION){
+            this.message = message;
+            this.errorMessage = null;
+        }
+        else if (type == ServerMessageType.ERROR){
+            this.errorMessage = message;
+            this.message = null;
+        }
+        else {
+            this.message = null;
+            this.errorMessage = null;
+        }
     }
 
     public ServerMessageType getServerMessageType() {
