@@ -1,9 +1,6 @@
 package service;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.State;
+import chess.*;
 import com.google.gson.Gson;
 import dataaccess.AuthInterface;
 import dataaccess.GameInterface;
@@ -63,6 +60,7 @@ public class WebSocketService {
         String username = getUsername(authToken);
         GameData gameData = gameAccess.getGame(gameID);
         ChessGame game = gameData.game();
+        ChessPiece.PieceType pieceType = game.getBoard().getPiece(move.getStartPosition()).getPieceType();
         if (game.getGameState() == State.GAMEOVER){
             throw new DataAccessException("This game has ended. Please leave and choose a different game to play.");
         }
@@ -75,7 +73,7 @@ public class WebSocketService {
         ServerMessage loadGame = new ServerMessage(game);
         connections.broadcast(null, loadGame);
         String notify = username + " moved their " +
-                game.getBoard().getPiece(move.getStartPosition()).getPieceType() + " to " + moveTranslator(move);
+                pieceType + " to " + moveTranslator(move);
         ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, notify);
         connections.broadcast(session, notification);
         checkConditions(gameData, ChessGame.TeamColor.WHITE);
