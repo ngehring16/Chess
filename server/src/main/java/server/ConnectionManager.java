@@ -28,9 +28,12 @@ public class ConnectionManager {
         connections.get(gameID).remove(session);
     }
 
-    public void broadcast(Session excludeSession, ServerMessage notification) throws IOException {
+    public void broadcast(Session excludeSession, ServerMessage notification, Integer gameID) throws IOException {
         String message = new Gson().toJson(notification);
         for (ArrayList<Session> f : connections.values()){
+            if (connections.get(gameID) != f){
+                continue;
+            }
             for(Session g : f){
                 if (!g.equals(excludeSession)){
                     if(g.isOpen()){

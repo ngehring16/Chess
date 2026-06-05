@@ -43,7 +43,7 @@ public class WebSocketService {
         String jsonMessage = new Gson().toJson(loadGame);
         session.getRemote().sendString(jsonMessage);
         ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, notify);
-        connections.broadcast(session, notification);
+        connections.broadcast(session, notification, gameID);
     }
 
     public void makeMove(int gameID, String authToken, ChessMove move, Session session) throws Exception{
@@ -66,11 +66,11 @@ public class WebSocketService {
         game.makeMove(move);
         gameAccess.updateGame(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
         ServerMessage loadGame = new ServerMessage(game);
-        connections.broadcast(null, loadGame);
+        connections.broadcast(null, loadGame, gameID);
         String notify = username + " moved their " +
                 pieceType + " to " + moveTranslator(move);
         ServerMessage notification = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, notify);
-        connections.broadcast(session, notification);
+        connections.broadcast(session, notification, gameID);
         checkConditions(gameData, ChessGame.TeamColor.WHITE);
         checkConditions(gameData, ChessGame.TeamColor.BLACK);
     }
@@ -79,26 +79,32 @@ public class WebSocketService {
         isValid(authToken, gameID);
         GameData gameData = gameAccess.getGame(gameID);
         String username = getUsername(authToken);
-        if (gameData.whiteUsername().equals(username)){
+        if (gameData.whiteUsername() != null && gameData.whiteUsername().equals(username)){
             gameAccess.updateGame(gameID, null, gameData.blackUsername(), gameData.gameName(), gameData.game());
         }
-        else if (gameData.blackUsername().equals(username)){
+        else if (gameData.blackUsername() != null && gameData.blackUsername().equals(username)){
             gameAccess.updateGame(gameID, gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
         }
         ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has left the game.");
         connections.remove(session, gameID);
-        connections.broadcast(session, notify);
+        connections.broadcast(session, notify, gameID);
     }
 
     public void resign(int gameID, String authToken, Session session) throws Exception{
         isValid(authToken, gameID);
         GameData gameData = gameAccess.getGame(gameID);
         String username = getUsername(authToken);
+        if (gameData.game().getGameState() == State.GAMEOVER){
+            throw new DataAccessException("Please select leave in order to stop watching.");
+        }
+        if (getTeam(username, gameID) == null){
+            throw new DataAccessException("It appears you are not currently playing! Please select leave if you would like to stop watching the game.");
+        }
         gameData.game().setGameState(State.GAMEOVER);
         gameData.game().setBoard(new ChessBoard());
         gameAccess.updateGame(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
         ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned");
-        connections.broadcast(null, notify);
+        connections.broadcast(null, notify, gameID);
     }
 
 
@@ -154,19 +160,19 @@ public class WebSocketService {
         if(game.isInCheckmate(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                     "CHECKMATE! " + username + " has lost.");
-            connections.broadcast(null, notify);
+            connections.broadcast(null, notify, gameData.gameID());
             game.setGameState(State.GAMEOVER);
         }
         else if(game.isInStalemate(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                     "STALEMATE! " + username + " is not in check but has no valid moves.");
-            connections.broadcast(null, notify);
+            connections.broadcast(null, notify, gameData.gameID());
             game.setGameState(State.GAMEOVER);
         }
         else if(game.isInCheck(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                     username + " is in check!");
-            connections.broadcast(null, notify);
+            connections.broadcast(null, notify, gameData.gameID());
         }
     }
 
