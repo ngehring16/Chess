@@ -31,17 +31,8 @@ public class WebSocketService {
         isValid(authToken, gameID);
         connections.add(session, gameID);
         String username = getUsername(authToken);
-        ChessGame.TeamColor teamColor;
+        ChessGame.TeamColor teamColor =getTeam(username, gameID);
         String notify;
-        if (username.equals(gameAccess.getGame(gameID).whiteUsername())){
-            teamColor = ChessGame.TeamColor.WHITE;
-        }
-        else if(username.equals(gameAccess.getGame(gameID).blackUsername())){
-            teamColor = ChessGame.TeamColor.BLACK;
-        }
-        else{
-            teamColor = null;
-        }
         if (teamColor == null){
             notify = username + " has joined the game to observe.";
         }
@@ -60,7 +51,10 @@ public class WebSocketService {
         String username = getUsername(authToken);
         GameData gameData = gameAccess.getGame(gameID);
         ChessGame game = gameData.game();
-        ChessPiece.PieceType pieceType = game.getBoard().getPiece(move.getStartPosition()).getPieceType();
+        ChessGame.TeamColor teamColor =getTeam(username, gameID);
+        if (game.getTeamTurn() != teamColor){
+            throw new DataAccessException("It is not your turn! You cannot make moves.");
+        }
         if (game.getGameState() == State.GAMEOVER){
             throw new DataAccessException("This game has ended. Please leave and choose a different game to play.");
         }
@@ -68,6 +62,7 @@ public class WebSocketService {
         if (!moveIsValid(validMoves, move)){
             throw new DataAccessException("This move is invalid. Please choose a valid move!");
         }
+        ChessPiece.PieceType pieceType = game.getBoard().getPiece(move.getStartPosition()).getPieceType();
         game.makeMove(move);
         gameAccess.updateGame(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
         ServerMessage loadGame = new ServerMessage(game);
@@ -106,6 +101,20 @@ public class WebSocketService {
         connections.broadcast(null, notify);
     }
 
+
+    private ChessGame.TeamColor getTeam(String username, int gameID) throws Exception{
+        ChessGame.TeamColor teamColor;
+        if (username.equals(gameAccess.getGame(gameID).whiteUsername())){
+            teamColor = ChessGame.TeamColor.WHITE;
+        }
+        else if(username.equals(gameAccess.getGame(gameID).blackUsername())){
+            teamColor = ChessGame.TeamColor.BLACK;
+        }
+        else{
+            teamColor = null;
+        }
+        return teamColor;
+    }
 
 
     private String getUsername(String authToken) throws Exception{
