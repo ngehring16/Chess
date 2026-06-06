@@ -13,9 +13,11 @@ public class PostLogin extends LoopTools{
     private final ServerFacade server;
     private final RegisterResult authData;
     private final String authToken;
-    public PostLogin(ServerFacade server, RegisterResult authData){
+    private final String url;
+    public PostLogin(ServerFacade server, RegisterResult authData, String url){
         this.server = server;
         this.authData = authData;
+        this.url = url;
         authToken = authData.authToken();
     }
 
@@ -115,7 +117,7 @@ public class PostLogin extends LoopTools{
         }
         System.out.println("Which color would you like to play as?");
         teamColor = getTeamColor(teamColor, color, gameData);
-        Gameplay gameplay = new Gameplay(gameData, teamColor);
+        Gameplay gameplay = new Gameplay(gameData, teamColor, url, authToken);
         gameplay.run();
         return "";
     }
@@ -130,7 +132,7 @@ public class PostLogin extends LoopTools{
         gameData = getGameNumber(i, gameData, games);
         DrawBoard drawBoard = new DrawBoard(gameData.game(), teamColor);
         drawBoard.run(new ChessMove(new ChessPosition(0,0), new ChessPosition(0,0), null));
-        Gameplay gameplay = new Gameplay(gameData, teamColor);
+        Gameplay gameplay = new Gameplay(gameData, teamColor, url, authToken);
         gameplay.run();
         return "";
     }

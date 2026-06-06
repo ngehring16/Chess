@@ -12,8 +12,10 @@ import static ui.EscapeSequences.*;
 
 public class PreLogin extends LoopTools{
     private final ServerFacade server;
-    public PreLogin(ServerFacade server){
+    private final String url;
+    public PreLogin(ServerFacade server, String url){
         this.server = server;
+        this.url = url;
     }
 
     public void run(){
@@ -65,7 +67,7 @@ public class PreLogin extends LoopTools{
         LoginRequest loginRequest = new LoginRequest(username, password);
         RegisterResult result = server.login(loginRequest);
         System.out.println("Successfully Logged in as " + result.username());
-        PostLogin postLogin = new PostLogin(server, result);
+        PostLogin postLogin = new PostLogin(server, result, url);
         postLogin.run();
         return "";
     }
@@ -87,7 +89,7 @@ public class PreLogin extends LoopTools{
         UserData user = new UserData(username, password, email);
         RegisterResult result = server.register(user);
         System.out.println("Successfully Logged in as " + result.username());
-        PostLogin postLogin = new PostLogin(server, result);
+        PostLogin postLogin = new PostLogin(server, result, url);
         postLogin.run();
         return "";
     }
