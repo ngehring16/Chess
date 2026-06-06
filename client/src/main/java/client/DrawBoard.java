@@ -10,7 +10,7 @@ import static ui.EscapeSequences.*;
 
 public class DrawBoard {
     private final ChessGame.TeamColor teamColor;
-    private final ChessBoard board;
+    private ChessBoard board;
 
     public DrawBoard(ChessGame game, ChessGame.TeamColor teamColor){
         this.teamColor = teamColor;

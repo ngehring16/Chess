@@ -2,10 +2,7 @@ package client;
 
 import WebSocket.NotificationManager;
 import WebSocket.WebSocketFacade;
-import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 import exception.ResponseException;
 import model.chessrecords.GameData;
 import websocket.messages.ServerMessage;
@@ -38,6 +35,13 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public void run(){
+        gameData.game().setGameState(State.GAMEON);
+        try{
+            facade.connect(authToken, gameData.gameID());
+        } catch (Exception e) {
+            errorFormat("ERROR: there was an unexpected issue. Please try again.");
+            return;
+        }
         Scanner scanner = new Scanner(System.in);
         var result = "";
         runLoop(result, help(), scanner);
@@ -76,6 +80,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public String leave(){
+        facade.leave(authToken, gameData.gameID());
         return "quit";
     }
 
@@ -88,14 +93,17 @@ public class Gameplay extends LoopTools implements NotificationManager {
     public String makeMove(){
         System.out.print(SET_TEXT_COLOR_GREEN);
         System.out.println("Move(RowCol): ");
-        System.out.print(SET_TEXT_COLOR_YELLOW);
         ChessMove move = moveGetter();
+        System.out.print(RESET_TEXT_COLOR);
         facade.makeMove(authToken, gameData.gameID(), move);
         currentMove = move;
         return "";
     }
 
-    public String resign(){return "";}
+    public String resign(){
+        facade.resign(authToken, gameData.gameID());
+        return "";
+    }
 
     public String highlightLegalMoves(){return "";}
 
@@ -106,15 +114,12 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     private void displayError(ServerMessage message){
-        System.out.print(SET_TEXT_ITALIC);
-        System.out.print(SET_TEXT_COLOR_RED);
-        System.out.println(message.getMessage());
-        System.out.print(RESET_TEXT_COLOR);
+        errorFormat(message.getErrorMessage());
     }
 
     private void loadGame(ServerMessage game){
         DrawBoard drawBoard = new DrawBoard(game.getGame(), teamColor);
-        drawBoard.run(nullMove);
+        drawBoard.run(currentMove);
     }
 
     private ChessMove moveGetter(){
@@ -149,15 +154,14 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     private void errorFormat(String message){
-        System.out.print(SET_TEXT_ITALIC);
         System.out.print(SET_TEXT_COLOR_RED);
         System.out.println(message);
         System.out.print(RESET_TEXT_COLOR);
-        System.out.print(RESET_TEXT_BOLD_FAINT);
     }
 
     private ChessPosition getPosition(String[] letters, int row, int col, String input, String query){
         while (input == null){
+            System.out.print(SET_TEXT_COLOR_YELLOW);
             input = getSingleInput(query);
             String[] spot = input.split("");
             for (int i = 0; i < 9; i++){
@@ -187,6 +191,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
     private ChessPiece.PieceType getPromotionPiece(ChessPiece.PieceType promotionPiece){
         String promotion = null;
         while (promotion == null){
+            System.out.print(SET_TEXT_COLOR_YELLOW);
             promotion = getSingleInput("Promotion type: <ROOK, KNIGHT, QUEEN, BISHOP>");
             String[] words = promotion.toLowerCase().split(" ");
             String command = words[0];
@@ -198,7 +203,6 @@ public class Gameplay extends LoopTools implements NotificationManager {
                 default -> {
                     errorFormat("ERROR: Please select a valid promotion piece.");
                     promotion = null;
-                    continue;
                 }
             }
         }

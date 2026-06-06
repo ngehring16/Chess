@@ -101,7 +101,6 @@ public class WebSocketService {
             throw new DataAccessException("It appears you are not currently playing! Please select leave if you would like to stop watching the game.");
         }
         gameData.game().setGameState(State.GAMEOVER);
-        gameData.game().setBoard(new ChessBoard());
         gameAccess.updateGame(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
         ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned");
         connections.broadcast(null, notify, gameID);
