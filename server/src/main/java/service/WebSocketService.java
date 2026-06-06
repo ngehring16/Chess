@@ -87,6 +87,7 @@ public class WebSocketService {
         }
         ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has left the game.");
         connections.broadcast(session, notify, gameID);
+        connections.remove(session, gameID);
     }
 
     public void resign(int gameID, String authToken, Session session) throws Exception{

@@ -35,7 +35,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public void run(){
-        gameData.game().setGameState(State.GAMEON);
+        playGame.setGameState(State.GAMEON);
         try{
             facade.connect(authToken, gameData.gameID());
         } catch (Exception e) {
@@ -91,6 +91,9 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public String makeMove(){
+        if (playGame.getGameState() == State.GAMEOVER){
+            errorFormat("This game has ended. Please leave and choose a different game to play.");
+        }
         System.out.print(SET_TEXT_COLOR_GREEN);
         System.out.println("Move(RowCol): ");
         ChessMove move = moveGetter();
