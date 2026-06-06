@@ -17,29 +17,27 @@ public class DrawBoard {
         board = game.getBoard();
     }
 
-    public void run(ChessMove move){
+    public void run(){
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         if (teamColor == ChessGame.TeamColor.WHITE){
-            drawWhite(out, move.getStartPosition().getRow(), move.getStartPosition().getColumn(), move.getEndPosition().getRow(),
-            move.getEndPosition().getColumn());
+            drawWhite(out);
         }
         if (teamColor == ChessGame.TeamColor.BLACK){
-            drawBlack(out, move.getStartPosition().getRow(), move.getStartPosition().getColumn(), move.getEndPosition().getRow(),
-                    move.getEndPosition().getColumn());
+            drawBlack(out);
         }
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
     }
 
-    private void drawWhite(PrintStream out, int y1, int x1, int y2, int x2){
+    private void drawWhite(PrintStream out){
         ChessPiece piece = null;
         String[] top = { "A", "B", "C" ,"D", "E", "F", "G", "H"};
         drawLetters(out, top);
         for (int j = 8; j > 0; j--){
             drawNumbers(out, j);
             for (int k = 1; k < 9; k++){
-                drawRow(out, j, k, piece, y1,x1, y2, x2);
+                drawRow(out, j, k, piece);
             }
             drawNumbers(out, j);
             out.print(RESET_BG_COLOR);
@@ -49,14 +47,14 @@ public class DrawBoard {
 
     }
 
-    private void drawBlack(PrintStream out, int y1, int x1, int y2, int x2){
+    private void drawBlack(PrintStream out){
         ChessPiece piece = null;
         String[] top = { "H", "G", "F" ,"E", "D", "C", "B", "A"};
         drawLetters(out, top);
         for (int j = 1; j < 9; j++){
             drawNumbers(out, j);
             for (int k = 8; k > 0; k--){
-                drawRow(out, j, k, piece, y1,x1, y2, x2);
+                drawRow(out, j, k, piece);
             }
             drawNumbers(out, j);
             out.print(RESET_BG_COLOR);
@@ -65,15 +63,8 @@ public class DrawBoard {
         drawLetters(out, top);
     }
 
-    private void drawRow(PrintStream out, int j, int k, ChessPiece piece, int y1, int x1, int y2, int x2){
-        if (j == y1 && k == x1){
-            out.print(SET_BG_COLOR_RED);
-        }
-        else if (j == y2 && k == x2){
-            out.print(SET_BG_COLOR_RED);
-        }
-
-        else if ((j+k)%2 == 0){
+    private void drawRow(PrintStream out, int j, int k, ChessPiece piece){
+        if ((j+k)%2 == 0){
             out.print(SET_BG_COLOR_DARK_GREY);
         }
         else{

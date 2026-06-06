@@ -86,7 +86,6 @@ public class WebSocketService {
             gameAccess.updateGame(gameID, gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
         }
         ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has left the game.");
-        connections.remove(session, gameID);
         connections.broadcast(session, notify, gameID);
     }
 

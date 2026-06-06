@@ -131,7 +131,7 @@ public class PostLogin extends LoopTools{
         System.out.println("Which game would you like to watch?");
         gameData = getGameNumber(i, gameData, games);
         DrawBoard drawBoard = new DrawBoard(gameData.game(), teamColor);
-        drawBoard.run(new ChessMove(new ChessPosition(0,0), new ChessPosition(0,0), null));
+        drawBoard.run();
         Gameplay gameplay = new Gameplay(gameData, teamColor, url, authToken);
         gameplay.run();
         return "";

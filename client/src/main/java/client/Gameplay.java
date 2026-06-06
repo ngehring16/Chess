@@ -12,16 +12,16 @@ import java.util.Scanner;
 
 public class Gameplay extends LoopTools implements NotificationManager {
     private final GameData gameData;
+    private ChessGame playGame;
     private final ChessGame.TeamColor teamColor;
     private final String authToken;
-    private final ChessMove nullMove = new ChessMove(new ChessPosition(0,0), new ChessPosition(0,0), null);
-    private ChessMove currentMove = nullMove;
 
     private final WebSocketFacade facade;
     public Gameplay(GameData gameData, ChessGame.TeamColor teamColor, String url, String authToken){
         this.gameData = gameData;
         this.teamColor = teamColor;
         this.facade = new WebSocketFacade(url, this);
+        playGame = gameData.game();
         this.authToken = authToken;
     }
 
@@ -85,8 +85,8 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public String redrawBoard(){
-        DrawBoard drawBoard = new DrawBoard(gameData.game(), teamColor);
-        drawBoard.run(currentMove);
+        DrawBoard drawBoard = new DrawBoard(playGame, teamColor);
+        drawBoard.run();
         return "";
     }
 
@@ -96,7 +96,6 @@ public class Gameplay extends LoopTools implements NotificationManager {
         ChessMove move = moveGetter();
         System.out.print(RESET_TEXT_COLOR);
         facade.makeMove(authToken, gameData.gameID(), move);
-        currentMove = move;
         return "";
     }
 
@@ -118,8 +117,9 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     private void loadGame(ServerMessage game){
+        playGame = game.getGame();
         DrawBoard drawBoard = new DrawBoard(game.getGame(), teamColor);
-        drawBoard.run(currentMove);
+        drawBoard.run();
     }
 
     private ChessMove moveGetter(){
@@ -133,12 +133,12 @@ public class Gameplay extends LoopTools implements NotificationManager {
         int row2 = 0;
         ChessPosition startPosition = getPosition(letters, row1, col1, input1, "START: ");
         ChessPosition endPosition = getPosition(letters, row2, col2, input2, "END: ");
-        if (gameData.game().getBoard().getPiece(startPosition) == null){
+        if (playGame.getBoard().getPiece(startPosition) == null){
             errorFormat("ERROR: Please select a move with a valid piece.");
             startPosition = getPosition(letters, row1, col1, input1, "START: ");
             endPosition = getPosition(letters, row2, col2, input2, "END: ");
         }
-        ChessPiece piece = gameData.game().getBoard().getPiece(startPosition);
+        ChessPiece piece = playGame.getBoard().getPiece(startPosition);
         if (piece.getTeamColor() != teamColor){
             errorFormat("ERROR: Please select a move with a valid piece.");
             startPosition = getPosition(letters, row1, col1, input1, "START: ");
