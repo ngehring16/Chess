@@ -19,7 +19,9 @@ public class PreLogin extends LoopTools{
     }
 
     public void run(){
+        System.out.print(SET_TEXT_COLOR_BLUE);
         System.out.println(SET_TEXT_BOLD + "♔ WELCOME CHESS CHAMPION. SIGN IN TO START ♚");
+        System.out.print(RESET_TEXT_COLOR);
         Scanner scanner = new Scanner(System.in);
         var result = "";
         runLoop(result, help(), scanner);
@@ -66,7 +68,9 @@ public class PreLogin extends LoopTools{
         }
         LoginRequest loginRequest = new LoginRequest(username, password);
         RegisterResult result = server.login(loginRequest);
+        System.out.print(SET_TEXT_COLOR_BLUE);
         System.out.println("Successfully Logged in as " + result.username());
+        System.out.print(RESET_TEXT_COLOR);
         PostLogin postLogin = new PostLogin(server, result, url);
         postLogin.run();
         return "";
@@ -88,7 +92,9 @@ public class PreLogin extends LoopTools{
         }
         UserData user = new UserData(username, password, email);
         RegisterResult result = server.register(user);
+        System.out.print(SET_TEXT_COLOR_BLUE);
         System.out.println("Successfully Logged in as " + result.username());
+        System.out.print(RESET_TEXT_COLOR);
         PostLogin postLogin = new PostLogin(server, result, url);
         postLogin.run();
         return "";

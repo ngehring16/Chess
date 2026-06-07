@@ -2,6 +2,9 @@ package client;
 
 import java.util.Scanner;
 
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
+
 public abstract class LoopTools {
     public LoopTools(){}
 
@@ -22,7 +25,7 @@ public abstract class LoopTools {
             System.out.print(help);
             String line = scanner.nextLine();
             if (line.isBlank()){
-                System.out.println("Please enter a valid input.");
+                errorFormat("ERROR: Please enter a valid input.");
                 continue;
             }
             try {
@@ -33,6 +36,12 @@ public abstract class LoopTools {
                 System.out.println(ex.getMessage());
             }
         }
+    }
+
+    public void errorFormat(String message){
+        System.out.print(SET_TEXT_COLOR_RED);
+        System.out.println(message);
+        System.out.print(RESET_TEXT_COLOR);
     }
 
     public abstract String eval(String line);

@@ -8,6 +8,7 @@ import model.chessrecords.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import static ui.EscapeSequences.*;
 
 public class PostLogin extends LoopTools{
     private final ServerFacade server;
@@ -62,7 +63,9 @@ public class PostLogin extends LoopTools{
 
     public String logout(){
         server.logout(authToken);
+        System.out.print(SET_TEXT_COLOR_BLUE);
         System.out.println("Goodbye! " + authData.username());
+        System.out.print(RESET_TEXT_COLOR);
         return "quit";
     }
 
@@ -74,7 +77,9 @@ public class PostLogin extends LoopTools{
         }
         CreateRequest request = new CreateRequest(gameName);
         server.create(request, authToken);
+        System.out.print(SET_TEXT_COLOR_BLUE);
         System.out.println("\nCONGRATS! " + gameName + " was created!");
+        System.out.print(RESET_TEXT_COLOR);
         return "";
     }
 
@@ -82,13 +87,14 @@ public class PostLogin extends LoopTools{
         ListResult result = server.list(authToken);
         ArrayList<GameData> games = result.games();
         if (games.isEmpty()){
-            System.out.println("It appears there are currently no games! Please create a new game.");
+            errorFormat("ERROR: It appears there are currently no games! Please create a new game.");
             return "";
         }
         int j = 0;
         for (int i = 1; i <= games.size(); i ++){
             System.out.println(i + ". " + games.get(j).gameName() +": "
-                    + games.get(j).whiteUsername() + ", " + games.get(j).blackUsername());
+                    + games.get(j).whiteUsername() + ", " + games.get(j).blackUsername() + ", "
+                    + SET_TEXT_COLOR_GREEN + games.get(j).game().getGameState().toString() + RESET_TEXT_COLOR);
             j++;
         }
         return "";
@@ -102,17 +108,17 @@ public class PostLogin extends LoopTools{
         String color = "";
         int i = 0;
         if (games.isEmpty()){
-            System.out.println("It appears there are no games to play! Please create a game in order to play.");
+            errorFormat("ERROR: It appears there are no games to play! Please create a game in order to play.");
             return "";
         }
         if (!hasOpenGames(games)){
-            System.out.println("There are no open games to play at this time. Please create a new game in order to play.");
+            errorFormat("ERROR: There are no open games to play at this time. Please create a new game in order to play.");
             return "";
         }
         System.out.println("Which game would you like to play?");
         gameData = getGameNumber(i, gameData, games);
         while (gameData.blackUsername() != null && gameData.whiteUsername() != null){
-            System.out.println("This game is full. Please choose a different game.");
+            errorFormat("ERROR: This game is full. Please choose a different game.");
             gameData = getGameNumber(0, gameData, games);
         }
         System.out.println("Which color would you like to play as?");
@@ -155,11 +161,11 @@ public class PostLogin extends LoopTools{
             try{
                 i = Integer.parseInt(game);
             } catch (NumberFormatException e) {
-                System.out.println("Error: Please input a number.");
+                errorFormat("ERROR: Please input a number.");
                 continue;
             }
             if (i < 1 || i > games.size()){
-                System.out.println("There is no game with that number! Please enter a valid game number.");
+                errorFormat("ERROR: There is no game with that number! Please enter a valid game number.");
                 continue;
             }
             gameData = games.get(i-1);
@@ -179,7 +185,7 @@ public class PostLogin extends LoopTools{
                 case "white" -> teamColor = ChessGame.TeamColor.WHITE;
                 case "black" -> teamColor = ChessGame.TeamColor.BLACK;
                 default -> {
-                    System.out.println("Please input a valid color.");
+                    System.out.println("ERROR: Please input a valid color.");
                     continue;
                 }
             }
@@ -187,7 +193,7 @@ public class PostLogin extends LoopTools{
                 server.join(new JoinRequest(teamColor, gameData.gameID()), authToken);
             }
             catch (ResponseException rE){
-                System.out.println("This color is already taken! Please pick a different one.");
+                errorFormat("ERROR: This color is already taken! Please pick a different one.");
                 teamColor = null;
             }
         }

@@ -1,6 +1,6 @@
 package chess;
 
 public enum State {
-    GAMEON,
+    GAMEOPEN,
     GAMEOVER
 }

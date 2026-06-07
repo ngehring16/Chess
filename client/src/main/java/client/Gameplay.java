@@ -35,7 +35,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public void run(){
-        playGame.setGameState(State.GAMEON);
+        playGame.setGameState(State.GAMEOPEN);
         try{
             facade.connect(authToken, gameData.gameID());
         } catch (Exception e) {
@@ -93,6 +93,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
     public String makeMove(){
         if (playGame.getGameState() == State.GAMEOVER){
             errorFormat("This game has ended. Please leave and choose a different game to play.");
+            return "";
         }
         System.out.print(SET_TEXT_COLOR_GREEN);
         System.out.println("Move(RowCol): ");
@@ -130,61 +131,69 @@ public class Gameplay extends LoopTools implements NotificationManager {
         String input1 = null;
         String input2 = null;
         ChessPiece.PieceType promotionPiece = null;
+        ChessPosition startPosition = null;
+        ChessPosition endPosition = null;
+        ChessPiece piece = null;
         int col1 = 0;
         int row1 = 0;
         int col2 = 0;
         int row2 = 0;
-        ChessPosition startPosition = getPosition(letters, row1, col1, input1, "START: ");
-        ChessPosition endPosition = getPosition(letters, row2, col2, input2, "END: ");
-        if (playGame.getBoard().getPiece(startPosition) == null){
-            errorFormat("ERROR: Please select a move with a valid piece.");
+        while (startPosition == null) {
             startPosition = getPosition(letters, row1, col1, input1, "START: ");
-            endPosition = getPosition(letters, row2, col2, input2, "END: ");
+            if (playGame.getBoard().getPiece(startPosition) == null) {
+                errorFormat("ERROR: Please select a move with a valid piece.");
+                startPosition = null;
+                continue;
+            }
+            piece = playGame.getBoard().getPiece(startPosition);
+            if (piece.getTeamColor() != teamColor) {
+                errorFormat("ERROR: Please select a move with a valid piece.");
+                startPosition = null;
+                continue;
+            }
         }
-        ChessPiece piece = playGame.getBoard().getPiece(startPosition);
-        if (piece.getTeamColor() != teamColor){
-            errorFormat("ERROR: Please select a move with a valid piece.");
-            startPosition = getPosition(letters, row1, col1, input1, "START: ");
-            endPosition = getPosition(letters, row2, col2, input2, "END: ");
-        }
-        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && teamColor == ChessGame.TeamColor.WHITE && endPosition.getRow() == 8){
+        endPosition = getPosition(letters, row2, col2, input2, "END: ");
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && teamColor == ChessGame.TeamColor.WHITE && endPosition.getRow() == 8) {
             promotionPiece = getPromotionPiece(promotionPiece);
         }
-        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && teamColor == ChessGame.TeamColor.BLACK && endPosition.getRow() == 1){
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && teamColor == ChessGame.TeamColor.BLACK && endPosition.getRow() == 1) {
             promotionPiece = getPromotionPiece(promotionPiece);
         }
         return new ChessMove(startPosition, endPosition, promotionPiece);
-    }
-
-    private void errorFormat(String message){
-        System.out.print(SET_TEXT_COLOR_RED);
-        System.out.println(message);
-        System.out.print(RESET_TEXT_COLOR);
     }
 
     private ChessPosition getPosition(String[] letters, int row, int col, String input, String query){
         while (input == null){
             System.out.print(SET_TEXT_COLOR_YELLOW);
             input = getSingleInput(query);
+            if (input == null){
+                continue;
+            }
             String[] spot = input.split("");
-            for (int i = 0; i < 9; i++){
+            for (int i = 0; i < 8; i++){
                 if (spot[0].equals(letters[i].toLowerCase())){
                     col = i+1;
                     break;
                 }
-                if (i == 8 && col == 0){
+                if (i == 7 && col == 0){
                     errorFormat("ERROR: Please input a valid position in this format- A4");
-                    break;
+                    input = null;
                 }
+            }
+            if (col == 0){
+                input = null;
+                continue;
             }
             try{
                 row = Integer.parseInt(spot[1]);
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 errorFormat("ERROR: Please input a valid position in this format- A4");
+                input = null;
                 continue;
             }
             if (row < 0 || row > 8 || col <0 || col > 8){
                 errorFormat("ERROR: Please input a valid position in this format- A4");
+                input = null;
                 continue;
             }
         }
@@ -196,9 +205,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
         while (promotion == null){
             System.out.print(SET_TEXT_COLOR_YELLOW);
             promotion = getSingleInput("Promotion type: <ROOK, KNIGHT, QUEEN, BISHOP>");
-            String[] words = promotion.toLowerCase().split(" ");
-            String command = words[0];
-            switch (command) {
+            switch (promotion) {
                 case "rook" -> promotionPiece = ChessPiece.PieceType.ROOK;
                 case "knight" -> promotionPiece = ChessPiece.PieceType.KNIGHT;
                 case "queen" -> promotionPiece = ChessPiece.PieceType.QUEEN;

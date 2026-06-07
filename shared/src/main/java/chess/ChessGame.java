@@ -13,7 +13,7 @@ import java.util.Objects;
 public class ChessGame {
     private ChessBoard board = new ChessBoard();
     private TeamColor team;
-    private State state = State.GAMEON;
+    private State state = State.GAMEOPEN;
 
     public ChessGame() {
         setTeamTurn(TeamColor.WHITE);

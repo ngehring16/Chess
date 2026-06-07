@@ -102,7 +102,7 @@ public class WebSocketService {
         }
         gameData.game().setGameState(State.GAMEOVER);
         gameAccess.updateGame(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
-        ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, username + " has resigned");
+        ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "GAMEOVER! " + username + " has resigned");
         connections.broadcast(null, notify, gameID);
     }
 
