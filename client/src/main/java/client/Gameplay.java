@@ -1,7 +1,7 @@
 package client;
 
-import WebSocket.NotificationManager;
-import WebSocket.WebSocketFacade;
+import websocket.NotificationManager;
+import websocket.WebSocketFacade;
 import chess.*;
 import exception.ResponseException;
 import model.chessrecords.GameData;

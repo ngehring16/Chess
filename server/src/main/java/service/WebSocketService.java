@@ -101,7 +101,8 @@ public class WebSocketService {
             throw new DataAccessException("Please select leave in order to stop watching.");
         }
         if (getTeam(username, gameID) == null){
-            throw new DataAccessException("It appears you are not currently playing! Please select leave if you would like to stop watching the game.");
+            throw new DataAccessException("It appears you are not currently playing! " +
+                    "Please select leave if you would like to stop watching the game.");
         }
         gameData.game().setGameState(State.GAMEOVER);
         gameAccess.updateGame(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
