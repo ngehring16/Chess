@@ -15,6 +15,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
     private ChessGame playGame;
     private final ChessGame.TeamColor teamColor;
     private final String authToken;
+    private final String[] letters = { "A", "B", "C" ,"D", "E", "F", "G", "H"};
 
     private final WebSocketFacade facade;
     public Gameplay(GameData gameData, ChessGame.TeamColor teamColor, String url, String authToken){
@@ -86,7 +87,7 @@ public class Gameplay extends LoopTools implements NotificationManager {
 
     public String redrawBoard(){
         DrawBoard drawBoard = new DrawBoard(playGame, teamColor);
-        drawBoard.run();
+        drawBoard.draw(null);
         return "";
     }
 
@@ -104,11 +105,63 @@ public class Gameplay extends LoopTools implements NotificationManager {
     }
 
     public String resign(){
-        facade.resign(authToken, gameData.gameID());
+        String input = null;
+        while (input == null){
+            System.out.print(SET_TEXT_COLOR_BLUE);
+            input = getSingleInput("Are you sure you would like to resign? This will end the game. Enter YES/NO");
+            System.out.println(RESET_TEXT_COLOR);
+            if (input == null){
+                continue;
+            }
+            String[] words = input.toLowerCase().split(" ");
+            String command = words[0];
+            switch (command) {
+                case "yes" -> facade.resign(authToken, gameData.gameID());
+                case "no" -> {
+                    System.out.print(SET_TEXT_COLOR_BLUE);
+                    System.out.println("OK! Let's keep playing.");
+                    System.out.print(RESET_TEXT_COLOR);
+                    return "";
+                }
+                default -> {
+                    errorFormat("ERROR: Please give a valid input.");
+                    input = null;
+                    continue;
+                }
+            }
+        }
         return "";
     }
 
-    public String highlightLegalMoves(){return "";}
+    public String highlightLegalMoves(){
+        int row = 0;
+        int col = 0;
+        ChessPosition position = null;
+        String input = null;
+        System.out.print(SET_TEXT_COLOR_GREEN);
+        while (position == null) {
+            position = getPosition(letters, row, col, input, "Piece: ");
+            if (playGame.getBoard().getPiece(position) == null) {
+                errorFormat("ERROR: Please select a valid piece.");
+                position = null;
+                continue;
+            }
+            ChessPiece piece = playGame.getBoard().getPiece(position);
+            if (piece.getTeamColor() != teamColor) {
+                errorFormat("ERROR: Please select a valid piece.");
+                position = null;
+                continue;
+            }
+        }
+        DrawBoard drawBoard = new DrawBoard(playGame, teamColor);
+        drawBoard.draw(position);
+        if (playGame.validMoves(position).isEmpty()){
+            System.out.print(SET_TEXT_COLOR_BLUE);
+            System.out.println("This piece has no legal moves!");
+            System.out.print(RESET_TEXT_COLOR);
+        }
+        return "";
+    }
 
     private void displayNotification(ServerMessage notification){
         System.out.print(SET_TEXT_COLOR_BLUE);
@@ -123,11 +176,10 @@ public class Gameplay extends LoopTools implements NotificationManager {
     private void loadGame(ServerMessage game){
         playGame = game.getGame();
         DrawBoard drawBoard = new DrawBoard(game.getGame(), teamColor);
-        drawBoard.run();
+        drawBoard.draw(null);
     }
 
     private ChessMove moveGetter(){
-        String[] letters = { "A", "B", "C" ,"D", "E", "F", "G", "H"};
         String input1 = null;
         String input2 = null;
         ChessPiece.PieceType promotionPiece = null;
@@ -170,31 +222,23 @@ public class Gameplay extends LoopTools implements NotificationManager {
                 continue;
             }
             String[] spot = input.split("");
-            for (int i = 0; i < 8; i++){
-                if (spot[0].equals(letters[i].toLowerCase())){
-                    col = i+1;
-                    break;
-                }
-                if (i == 7 && col == 0){
-                    errorFormat("ERROR: Please input a valid position in this format- A4");
-                    input = null;
-                }
-            }
+            col = letterTranslator(letters, spot[0], col);
             if (col == 0){
+                errorFormat("ERROR: Please input a valid position in this format- A4");
                 input = null;
                 continue;
             }
             try{
                 row = Integer.parseInt(spot[1]);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 errorFormat("ERROR: Please input a valid position in this format- A4");
                 input = null;
                 continue;
             }
-            if (row < 0 || row > 8 || col <0 || col > 8){
+            if (row < 0 || row > 8 || col < 0 || col > 8){
                 errorFormat("ERROR: Please input a valid position in this format- A4");
                 input = null;
-                continue;
             }
         }
         return new ChessPosition(row, col);
@@ -205,6 +249,10 @@ public class Gameplay extends LoopTools implements NotificationManager {
         while (promotion == null){
             System.out.print(SET_TEXT_COLOR_YELLOW);
             promotion = getSingleInput("Promotion type: <ROOK, KNIGHT, QUEEN, BISHOP>");
+            System.out.println(RESET_TEXT_COLOR);
+            if (promotion == null){
+                continue;
+            }
             switch (promotion) {
                 case "rook" -> promotionPiece = ChessPiece.PieceType.ROOK;
                 case "knight" -> promotionPiece = ChessPiece.PieceType.KNIGHT;
@@ -217,5 +265,15 @@ public class Gameplay extends LoopTools implements NotificationManager {
             }
         }
         return promotionPiece;
+    }
+
+    private int letterTranslator(String[] letters, String spot, int col){
+        for (int i = 0; i < 8; i++){
+            if (spot.equals(letters[i].toLowerCase())){
+                col = i+1;
+                break;
+            }
+        }
+        return col;
     }
 }

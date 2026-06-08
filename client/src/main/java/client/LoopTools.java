@@ -13,7 +13,7 @@ public abstract class LoopTools {
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
         if (line.isBlank()){
-            System.out.println("Please give a valid input.");
+            errorFormat("ERROR: Please give a valid input.");
             return null;
         }
         var words = line.toLowerCase().split(" ");
