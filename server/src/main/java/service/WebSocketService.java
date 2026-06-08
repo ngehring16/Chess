@@ -163,14 +163,16 @@ public class WebSocketService {
         if(game.isInCheckmate(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                     "CHECKMATE! " + username + " has lost.");
-            connections.broadcast(null, notify, gameData.gameID());
             game.setGameState(State.GAMEOVER);
+            gameAccess.updateGame(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
+            connections.broadcast(null, notify, gameData.gameID());
         }
         else if(game.isInStalemate(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
                     "STALEMATE! " + username + " is not in check but has no valid moves.");
-            connections.broadcast(null, notify, gameData.gameID());
             game.setGameState(State.GAMEOVER);
+            gameAccess.updateGame(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), gameData.game());
+            connections.broadcast(null, notify, gameData.gameID());
         }
         else if(game.isInCheck(teamColor)){
             ServerMessage notify = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,

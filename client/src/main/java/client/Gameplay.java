@@ -148,11 +148,6 @@ public class Gameplay extends LoopTools implements NotificationManager {
                 continue;
             }
             ChessPiece piece = playGame.getBoard().getPiece(position);
-            if (piece.getTeamColor() != teamColor) {
-                errorFormat("ERROR: Please select a valid piece.");
-                position = null;
-                continue;
-            }
         }
         DrawBoard drawBoard = new DrawBoard(playGame, teamColor);
         drawBoard.draw(position);
