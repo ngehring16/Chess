@@ -52,7 +52,10 @@ public class WebSocketService {
         GameData gameData = gameAccess.getGame(gameID);
         ChessGame game = gameData.game();
         ChessGame.TeamColor teamColor =getTeam(username, gameID);
-        if (game.getTeamTurn() != teamColor){
+        if (teamColor == null){
+            throw new DataAccessException("ERROR: Observers cannot make moves.");
+        }
+        else if (game.getTeamTurn() != teamColor){
             throw new DataAccessException("It is not your turn! You cannot make moves.");
         }
         if (game.getGameState() == State.GAMEOVER){

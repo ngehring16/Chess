@@ -108,7 +108,8 @@ public class Gameplay extends LoopTools implements NotificationManager {
         String input = null;
         while (input == null){
             System.out.print(SET_TEXT_COLOR_BLUE);
-            input = getSingleInput("Are you sure you would like to resign? This will end the game. Enter YES/NO");
+            System.out.println("Are you sure you would like to resign? This will end the game.");
+            input = getSingleInput("Enter YES/NO");
             System.out.println(RESET_TEXT_COLOR);
             if (input == null){
                 continue;
@@ -248,7 +249,9 @@ public class Gameplay extends LoopTools implements NotificationManager {
         String promotion = null;
         while (promotion == null){
             System.out.print(SET_TEXT_COLOR_YELLOW);
-            promotion = getSingleInput("Promotion type: <ROOK, KNIGHT, QUEEN, BISHOP>");
+            System.out.println("Promotion:");
+            promotion = getSingleInput("<ROOK"+ WHITE_ROOK +", KNIGHT"+ WHITE_KNIGHT +
+                    ", QUEEN" + WHITE_QUEEN + ", BISHOP"+ WHITE_BISHOP+ ">");
             System.out.println(RESET_TEXT_COLOR);
             if (promotion == null){
                 continue;
